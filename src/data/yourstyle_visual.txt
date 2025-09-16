@@ -1,0 +1,24 @@
+** Yourstyle brand guide **
+{
+    "color_palette": {
+        "primary": { "name": "forest green", "hex": "#014c3d" },
+        "highlight": { "name": "warm yellow", "hex": "#e7b640" },
+        "accent": { "name": "mint green", "hex": "#28b589" },
+        "text_light": { "name": "white", "hex": "#ffffff" },
+        "text_dark": { "name": "black", "hex": "#000000" }
+    },
+    "typography": {
+        "brand_font": {
+            "name": "Montserrat Sans",
+            "style": "modern, geometrisch, strak",
+            "weights": ["Regular", "SemiBold", "Bold"],
+            "usage": ["display", "branding", "overlay text"],
+            "license": "open source (Google Fonts)"
+        },
+        "font_family": "Montserrat, Inter, sans-serif",
+        "fallback_font": "Arial Rounded",
+        "font_weight": "bold",
+        "font_case": "sentence",
+        "highlight_color": "#e7b640"
+    }
+}

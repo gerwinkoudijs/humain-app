@@ -1,0 +1,2 @@
+[phases.setup]
+cmds=['cp /usr/lib/x86_64-linux-gnu/libcrypto.so.3 /usr/lib/x86_64-linux-gnu/libssl.so.3 /app/']
