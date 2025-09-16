@@ -40,6 +40,8 @@ export const Prompt = (props: {
                   {
                     prompt: prompt,
                     imageUrls: props.uploadUrls,
+                    cta: "",
+                    printText: "",
                   },
                   {
                     onSuccess: (data) => {

@@ -1,5 +1,5 @@
 import { ApiResponse } from "@/lib/api";
-import { generateImageStep2 } from "@/server/lib/ai/humain";
+// import { generateImageStep2 } from "@/server/lib/ai/humain";
 
 const HUMAIN_API_KEY =
   "8001b2a82af192c0fa0b193a2b4886f3bef5d0f0219402df6cc78038618e3f1d";
@@ -15,10 +15,14 @@ export async function POST(req: Request) {
 
   const data = await req.json();
 
-  const result = await generateImageStep2(data.base64Image);
+  // const result = await generateImageStep2(data.base64Image);
+
+  // return ApiResponse({
+  //   base64Image: result,
+  // });
 
   return ApiResponse({
-    base64Image: result,
+    base64Image: "DISABLED",
   });
 
   //   const formData = await req.formData();

@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 const menuItems = [
   { name: "Yourstyle AI", path: "/yourstyle-ai" },
-  { name: "Settings", path: "/settings" },
+  //{ name: "Settings", path: "/settings" },
 ];
 
 export const Menu = () => {

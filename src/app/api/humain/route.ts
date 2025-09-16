@@ -1,7 +1,7 @@
-import { NextResponse as NextServerResponse } from "next/server";
-import { createPartFromUri, GoogleGenAI } from "@google/genai";
-import { indexDocument } from "@/server/lib/ai/rag";
-import { db } from "@/server/lib/db";
+// import { NextResponse as NextServerResponse } from "next/server";
+// import { createPartFromUri, GoogleGenAI } from "@google/genai";
+// import { indexDocument } from "@/server/lib/ai/rag";
+// import { db } from "@/server/lib/db";
 import { ApiResponse } from "@/lib/api";
 import { generateImage } from "@/server/lib/ai/humain";
 
@@ -19,10 +19,11 @@ export async function POST(req: Request) {
 
   const data = await req.json();
 
-  const result = await generateImage(data.prompt, []);
+  //  const result = await generateImage(data.prompt, []);
 
   return ApiResponse({
-    base64Image: result,
+    //  base64Image: result,
+    base64Image: "DISABLED",
   });
 
   //   const formData = await req.formData();
