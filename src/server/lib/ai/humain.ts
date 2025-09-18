@@ -235,7 +235,7 @@ export const editImage = async (
         // `,
         text: `
 - Plaats de persoon van de eerste afbeelding in de sjabloonafbeelding (tweede afbeelding) aan de rechterkant.
-- Voeg de volgende tekst toe in het gele vlak, gebruik een zwarte letterkleur, font 'Montserrat', pas de grootte dienovereenkomstig aan, let op de spelling! De tekst: "${cta}"
+- Voeg de volgende tekst toe in het gele vlak, gebruik een zwarte letterkleur, font 'Montserrat', pas de grootte dienovereenkomstig aan, let op de spelling! De tekst: "Shop nu!"
 - Gebruik een afbeeldingsgrootte van 1024x1024.
 - Gebruik de sjabloonafbeelding om de beeldverhouding en de uitvoerresolutie te bepalen.
 - DE BEELDVERHOUDING MOET VIERKANT ZIJN.
