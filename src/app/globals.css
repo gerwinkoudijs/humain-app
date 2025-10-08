@@ -1,8 +1,79 @@
 @import "tailwindcss";
 
 @theme {
-  --font-opensans: "Open Sans", Arial, Helvetica, sans-serif;
+  --color-primary: #01a888;
+  --color-primary-dark: #018e74;
+}
 
-  --color-primary: #0062ff;
-  --color-secondary: #222221;
+:root {
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --border: 240 5.9% 90%;
+  --ring: 240 5.9% 10%;
+  --sidebar: hsl(0 0% 98%);
+  --sidebar-foreground: hsl(240 5.3% 26.1%);
+  --sidebar-primary: hsl(240 5.9% 10%);
+  --sidebar-primary-foreground: hsl(0 0% 98%);
+  --sidebar-accent: hsl(240 4.8% 95.9%);
+  --sidebar-accent-foreground: hsl(240 5.9% 10%);
+  --sidebar-border: hsl(220 13% 91%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+* {
+  border-color: hsl(var(--border));
+  outline-color: hsl(var(--ring) / 0.5);
+}
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+[contentEditable="true"]:empty:before {
+  content: attr(data-placeholder);
+  color: gray;
+}
+
+@keyframes jump {
+  0% {
+    bottom: 0px;
+  }
+  20% {
+    bottom: 5px;
+  }
+  40% {
+    bottom: 0px;
+  }
+}
+
+.jumping-dots div {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  animation: jump 1s infinite ease-in-out;
+  display: inline-block;
+}
+
+.jumping-dots .dot-1 {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 2.5px;
+  animation-delay: 200ms;
+}
+
+.jumping-dots .dot-2 {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 2.5px;
+  animation-delay: 400ms;
+}
+
+.jumping-dots .dot-3 {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 2.5px;
+  animation-delay: 600ms;
 }

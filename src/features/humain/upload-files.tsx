@@ -61,7 +61,8 @@ export function UploadFiles(props: {
               }
             );
 
-            console.log("Upload Successful:", response.data.message);
+            // console.log("Upload Successful:", response.data.message);
+
             uploadUrls.current.push({
               name: file.name,
               url: response.data.fileUrl,
@@ -88,8 +89,7 @@ export function UploadFiles(props: {
   }, []);
 
   return (
-    <div className="px-8 flex flex-col gap-2">
-      <h2>Reference images:</h2>
+    <div className="flex flex-col gap-2">
       <FileUpload
         value={files}
         onValueChange={setFiles}
@@ -99,20 +99,6 @@ export function UploadFiles(props: {
         className="w-full max-w-md"
         multiple
       >
-        <FileUploadDropzone>
-          <div className="flex flex-col items-center gap-1 text-center">
-            <div className="flex items-center justify-center rounded-full border p-2.5">
-              <Upload className="size-6 text-muted-foreground" />
-            </div>
-            <p className="font-medium text-sm">Drag & drop a file here</p>
-            <p className="text-muted-foreground text-xs">Or click to browse</p>
-          </div>
-          <FileUploadTrigger asChild>
-            <Button variant="outline" size="sm" className="mt-2 w-fit">
-              Browse files
-            </Button>
-          </FileUploadTrigger>
-        </FileUploadDropzone>
         <FileUploadList>
           {files.map((file, index) => (
             <FileUploadItem key={index} value={file} className="flex-col">
@@ -139,6 +125,17 @@ export function UploadFiles(props: {
             </FileUploadItem>
           ))}
         </FileUploadList>
+        <FileUploadDropzone>
+          <div className="flex flex-col items-center gap-1 text-center">
+            <p className="font-medium text-sm">Drag & drop an image here</p>
+            <p className="text-muted-foreground text-xs">Or click to browse</p>
+          </div>
+          <FileUploadTrigger asChild>
+            <Button variant="outline" size="sm" className="mt-2 w-fit">
+              Add image(s)
+            </Button>
+          </FileUploadTrigger>
+        </FileUploadDropzone>
       </FileUpload>
     </div>
   );

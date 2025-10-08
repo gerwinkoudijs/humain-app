@@ -2,37 +2,60 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import {
+  createNewSession,
   editImage,
   generateImage,
-  //generateImageStep2,
   generatePost,
 } from "@/server/lib/ai/humain";
 
 export const humainRouter = createTRPCRouter({
+  createNewSession: publicProcedure
+    .input(
+      z.object({
+        prompt: z.string().min(1),
+        template: z.number().min(1).max(5),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await createNewSession(input.prompt, input.template);
+    }),
   generatePost: publicProcedure
     .input(
       z.object({
+        chatSessionId: z.string().min(1),
         prompt: z.string().min(1),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      return await generatePost(input.prompt);
+      return await generatePost(input.chatSessionId, input.prompt);
     }),
   generateImage: publicProcedure
     .input(
       z.object({
+        chatSessionId: z.string().min(1),
         prompt: z.string().min(1),
         imageUrls: z.array(z.string()),
         cta: z.string().min(1),
         printText: z.string().min(1),
+        post: z.object({
+          title: z.string(),
+          text: z.string(),
+          hashTags: z.array(z.string()).optional(),
+        }),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const result = await generateImage(
+        input.chatSessionId,
         input.prompt,
         input.imageUrls,
         input.cta,
-        input.printText
+        input.printText,
+        {
+          title: input.post.title,
+          text: input.post.text,
+          hashTags: input.post.hashTags,
+        }
       );
 
       return {
@@ -42,20 +65,20 @@ export const humainRouter = createTRPCRouter({
   editImage: publicProcedure
     .input(
       z.object({
-        imageBase64: z.string(),
+        chatSessionId: z.string().min(1),
         prompt: z.string(),
-        cta: z.string().min(1),
+        imageUrls: z.array(z.string()),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const result = await editImage(
-        input.imageBase64,
+        input.chatSessionId,
         input.prompt,
-        input.cta
+        input.imageUrls
       );
 
       return {
-        base64Image: result,
+        imageUrl: result,
       };
     }),
   // generateImageStep2: publicProcedure

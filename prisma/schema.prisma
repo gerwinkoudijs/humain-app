@@ -9,30 +9,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model llamaindex_embedding {
-  id          String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  external_id String?                @db.VarChar
-  collection  String?                @db.VarChar
-  document    String?
-  metadata    Json?                  @default("{}")
-  embeddings  Unsupported("vector")?
-
-  @@index([collection], map: "idx_llamaindex_embedding_collection")
-  @@index([external_id], map: "idx_llamaindex_embedding_external_id")
-}
-
-model documents {
-  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name       String?  @db.VarChar
-  summary    String?  @db.VarChar
-  category   String?
-  status     String?  @db.VarChar
-  created_at DateTime @default(now()) @db.Timestamp(6)
-
-  @@index([name], map: "idx_documents_name")
-  @@index([category], map: "idx_documents_category")
-}
-
 model settings {
   name        String   @id @db.VarChar
   description String?  @db.VarChar
@@ -42,52 +18,38 @@ model settings {
   updated_at  DateTime @default(now()) @db.Timestamp(6)
 }
 
-enum MessageStatus {
-  NEW
-  PROCESSING
-  COMPLETED
-  FAILED
-  ARCHIVED
-  DELETED
+model chat_sessions {
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title         String?         @db.VarChar
+  user          String?         @db.VarChar
+  post_title    String?         @db.VarChar
+  post_text     String?         @db.Text
+  post_hashtags String?         @db.VarChar
+  image_base64  String?         @db.VarChar
+  template      Int?            @default(1) @db.Integer
+  created_at    DateTime        @default(now()) @db.Timestamp(6)
+  updated_at    DateTime        @default(now()) @db.Timestamp(6)
+  chat_messages chat_messages[]
+
+  @@index([created_at], map: "idx_chat_sessions_created_at")
 }
 
-enum MessageFeedback {
-  NEUTRAL
-  GOOD
-  BAD
-  SPAM
-}
-
-model messages {
-  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  external_id     String?  @db.VarChar
-  conversation_id String?  @db.VarChar
-  type            String   @db.VarChar
-  subject         String?  @db.VarChar
-  from            String?  @db.VarChar
-  to              String?  @db.VarChar
-  content_md      String?  @db.VarChar
-  content_raw     String?  @db.VarChar
-  date            DateTime
-
-  ai_summary        String? @db.VarChar
-  ai_follow_up      String? @db.VarChar
-  ai_reply          String? @db.VarChar
-  ai_trello_title   String? @db.VarChar
-  ai_trello_content String? @db.VarChar
-  ai_categories     String? @db.VarChar
-  ai_role           String? @db.VarChar
-  ai_department     String? @db.VarChar
-  ai_urgency        String? @db.VarChar
-
-  status MessageStatus @default(NEW)
-
-  feedback MessageFeedback @default(NEUTRAL)
+model chat_messages {
+  id              String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  chat_session_id String  @db.Uuid
+  role            String  @db.VarChar
+  text            String? @db.Text
+  prompt          String? @db.Text
+  data            Json?   @default("{}")
+  data_type       String? @db.VarChar
+  type            String? @db.VarChar
+  token_count     Int?    @default(0)
 
   created_at DateTime @default(now()) @db.Timestamp(6)
   updated_at DateTime @default(now()) @db.Timestamp(6)
 
-  @@index([external_id], map: "idx_messages_external_id")
-  @@index([conversation_id], map: "idx_messages_conversation_id")
-  @@index([status], map: "idx_messages_status")
+  chat_session chat_sessions @relation(fields: [chat_session_id], references: [id], onDelete: Cascade)
+
+  @@index([created_at], map: "idx_chat_messages_created_at")
+  @@index([chat_session_id], map: "idx_chat_messages_chat_session_id")
 }
