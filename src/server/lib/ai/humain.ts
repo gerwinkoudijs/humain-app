@@ -8,7 +8,7 @@ import { generateObject } from "ai";
 import { z } from "zod";
 import { yourstyleInfo } from "../../../data/yourstyle_info";
 import { Readable } from "stream";
-import { config } from "../../../lib/config";
+//import { config } from "../../../lib/config";
 
 const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_AI_API_KEY ?? "",
