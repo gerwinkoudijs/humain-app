@@ -8,6 +8,8 @@ import { z } from "zod";
 import { yourstyleInfo } from "../../../data/yourstyle_info";
 import { db } from "../db";
 import { put } from "@vercel/blob";
+import OpenAI, { toFile } from "openai";
+import { createUrlReadStream } from "@/lib/file";
 
 const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_AI_API_KEY ?? "",
@@ -130,6 +132,118 @@ export const generatePost = async (chatSessionId: string, text: string) => {
   });
 
   return { posts: result.object.posts, chatSessionId };
+};
+
+export const generateImageOpenAi = async (
+  chatSessionId: string,
+  prompt: string,
+  fileUrls: string[],
+  cta: string,
+  printText: string,
+  post: {
+    title: string;
+    text: string;
+    hashTags?: string[];
+  }
+) => {
+  // await db.chat_messages.create({
+  //   data: {
+  //     chat_session_id: chatSessionId,
+  //     role: "user",
+  //     text: "Selected Social Post",
+  //     type: "prompt",
+  //     data: { post },
+  //   },
+  // });
+
+  await db.chat_sessions.update({
+    where: { id: chatSessionId },
+    data: {
+      post_title: post.title,
+      post_text: post.text,
+      post_hashtags: post.hashTags?.join(" "),
+    },
+  });
+
+  await db.chat_messages.create({
+    data: {
+      chat_session_id: chatSessionId,
+      role: "system",
+      text: "Ok, I will generate the image now",
+      prompt: prompt,
+      type: "response",
+    },
+  });
+
+  const finalPrompt = getHumainDesignerPrompt(prompt, cta, printText);
+
+  const openai = new OpenAI({ apiKey: process.env.OPEN_AI_SECRET ?? "" });
+
+  let base64ImageResult: string | undefined = undefined;
+
+  if (fileUrls?.length === 0) {
+    const response = await openai.images.generate({
+      model: "gpt-image-1",
+      prompt: finalPrompt,
+      quality: "high",
+      //size: "2048x2048",
+      size: "1024x1024",
+      moderation: "low",
+    });
+
+    base64ImageResult = response.data ? response.data[0].b64_json : undefined;
+    if (!base64ImageResult) {
+      await db.chat_messages.create({
+        data: {
+          chat_session_id: chatSessionId,
+          role: "system",
+          type: "error",
+          text: "Image generation failed. Try again or change the prompt.",
+        },
+      });
+      return "";
+    }
+  } else {
+    const images = await Promise.all(
+      fileUrls.map(
+        async (fileUrl) =>
+          await toFile(createUrlReadStream(fileUrl), null, {
+            type: "image/png",
+          })
+      )
+    );
+
+    const response = await openai.images.edit({
+      model: "gpt-image-1",
+      prompt: finalPrompt,
+      image: images,
+      quality: "high",
+      //size: "2048x2048",
+      size: "1024x1024",
+    });
+
+    base64ImageResult = response.data ? response.data[0].b64_json : undefined;
+    if (!base64ImageResult) {
+      await db.chat_messages.create({
+        data: {
+          chat_session_id: chatSessionId,
+          role: "system",
+          type: "error",
+          text: "Image generation failed. Try again or change the prompt.",
+        },
+      });
+      return "";
+    }
+  }
+
+  await db.chat_sessions.update({
+    where: { id: chatSessionId },
+    data: {
+      image_base64: base64ImageResult,
+    },
+  });
+
+  return await editImage(chatSessionId, "", [], true);
 };
 
 export const generateImage = async (
