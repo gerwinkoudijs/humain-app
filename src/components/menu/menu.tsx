@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 const menuItems = [
-  { name: "Yourstyle AI", path: "/yourstyle-ai" },
+  { name: "Yourstyle AI", path: "/" },
   //{ name: "Settings", path: "/settings" },
 ];
 

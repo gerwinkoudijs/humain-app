@@ -1,12 +1,10 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import {
-  createNewSession,
-  editImage,
-  generateImage,
-  generatePost,
-} from "@/server/lib/ai/humain";
+import { editImage } from "@/server/lib/ai/humain/edit-image";
+import { generatePost } from "@/server/lib/ai/humain/gen-post";
+import { createNewSession } from "@/server/lib/ai/humain/new-session";
+import { generateImage } from "@/server/lib/ai/humain/gen-image";
 
 export const humainRouter = createTRPCRouter({
   createNewSession: publicProcedure

@@ -197,7 +197,7 @@ const SystemMessage = (props: {
       )}
       {props.message.data_type === "image_url" && !!props.message.data && (
         <div className="flex w-full justify-end mb-2">
-          <div className="flex flex-col rounded-xl overflow-hidden">
+          <div className="flex flex-col  shadow-lg rounded-t-xl overflow-hidden">
             <div className="bg-neutral-200 p-0 w-[500px] h-[500px] flex items-center justify-center overflow-hidden">
               <Image
                 src={props.message.data.toString()}
@@ -207,7 +207,7 @@ const SystemMessage = (props: {
               />
             </div>
             <div
-              className="bg-neutral-100 w-[500px] p-4 cursor-pointer hover:bg-neutral-200 transition-all text-[16px]"
+              className="bg-neutral-100 w-[500px] p-4 cursor-pointer transition-all text-[16px]"
               onClick={async () => {}}
             >
               <div>

@@ -72,9 +72,9 @@ export const GeneratePost = (props: {
     return (
       <div className="flex flex-col items-start justify-center gap-2">
         <div className="text-xl font-semibold text-stone-700">
-          Choose a template:
+          Kies een sjabloon:
         </div>
-        <div className="flex flex-wrap gap-4">
+        <div className="grid grid-cols-3 gap-4">
           <Image
             src="/images/template1/bg.png"
             width={200}
@@ -107,6 +107,14 @@ export const GeneratePost = (props: {
             className="rounded-xl hover:scale-105 transition-all cursor-pointer"
             onClick={() => setTemplate(4)}
           />
+          <Image
+            src="/images/template5/bg.png"
+            width={200}
+            height={200}
+            alt=""
+            className="rounded-xl hover:scale-105 transition-all cursor-pointer"
+            onClick={() => setTemplate(5)}
+          />
         </div>
       </div>
     );
@@ -118,7 +126,7 @@ export const GeneratePost = (props: {
         <div className="flex flex-col gap-2 w-full max-w-[820px]">
           <div className="flex w-full justify-start">
             <div className=" rounded-xl bg-primary/10 p-2 px-4">
-              Selected template:
+              Geselecteerde sjabloon:
             </div>
           </div>
           <Image

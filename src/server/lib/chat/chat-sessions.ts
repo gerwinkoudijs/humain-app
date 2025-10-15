@@ -7,6 +7,13 @@ export const listChatSessions = async () => {
   });
 };
 
+export const deletetChatSession = async (sessionId: string) => {
+  return await db.chat_sessions.delete({
+    where: { id: sessionId },
+    include: { chat_messages: true },
+  });
+};
+
 export const listChatSessionMessages = async (
   sessionId: string,
   fromDate: Date

@@ -33,11 +33,11 @@ const data = {
       url: "#",
       items: [
         {
-          title: "Generate Social Post",
+          title: "Genereer Social Post",
           url: "/generate",
         },
         {
-          title: "Settings",
+          title: "Instellingen",
           url: "/settings",
         },
       ],
@@ -50,10 +50,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar {...props} className="bg-stone-100">
-      <SidebarHeader>
+      <SidebarHeader className="bg-stone-100">
         <div className="px-2 pt-2 font-semibold">Yourstyle AI</div>
       </SidebarHeader>
-      <SidebarContent className="gap-0">
+      <SidebarContent className="gap-0 bg-stone-100">
         {/* We create a collapsible SidebarGroup for each parent. */}
         {data.navMain.map((item) => (
           <Collapsible
@@ -93,7 +93,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </Collapsible>
         ))}
         <Collapsible
-          title={"Recent Creations"}
+          title={"Recente Opdrachten"}
           defaultOpen
           className="group/collapsible"
         >
@@ -103,7 +103,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="group/label text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             >
               <CollapsibleTrigger>
-                {"Recent Creations"}{" "}
+                {"Recente Opdrachten"}{" "}
                 <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
               </CollapsibleTrigger>
             </SidebarGroupLabel>
