@@ -3,7 +3,6 @@
 // import { indexDocument } from "@/server/lib/ai/rag";
 // import { db } from "@/server/lib/db";
 import { ApiResponse } from "@/lib/api";
-import { generateImage } from "@/server/lib/ai/humain";
 
 const HUMAIN_API_KEY =
   "8001b2a82af192c0fa0b193a2b4886f3bef5d0f0219402df6cc78038618e3f1d";
