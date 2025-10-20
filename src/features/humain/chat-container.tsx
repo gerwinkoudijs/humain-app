@@ -5,6 +5,7 @@ import { api } from "@/trpc/react";
 import Image from "next/image";
 import { Dots } from "@/components/ui/dots";
 import { AnimatePresence, motion } from "motion/react";
+import { RefreshCw } from "lucide-react";
 
 export const ChatContainer = (props: {
   session: chat_sessions;
@@ -16,6 +17,56 @@ export const ChatContainer = (props: {
   onThinkingStop: () => void;
   imageUrls: string[];
 }) => {
+  const {
+    isPending: generateVisualPending,
+    mutate: generateVisual,
+    data: generateVisualResult,
+  } = api.humain.generateImage.useMutation();
+
+  const onRetry = async () => {
+    props.onThinkingStart();
+
+    // Find the selected post
+    const msg = props.messages.find(
+      (msg) =>
+        msg.role === "system" &&
+        msg.data &&
+        (msg.data as any).posts &&
+        (msg.data as any).posts.length > 0
+    );
+
+    if (!msg) {
+      props.onThinkingStop();
+      return;
+    }
+
+    const post = (msg.data as any).posts.find(
+      (p: any) => p.title === props.session.post_title
+    );
+
+    await generateVisual(
+      {
+        chatSessionId: props.chatSessionId!,
+        prompt: post.socialMediaImagePrompt,
+        imageUrls: props.imageUrls,
+        cta: post.ctaText,
+        printText: post.printText,
+        post: {
+          title: post.title,
+          text: post.text,
+          hashTags: post.hashTags ?? [],
+        },
+        retry: true,
+      },
+      {
+        onSuccess: (data) => {
+          props.onThinkingStop();
+          // props.onImageResult(data.base64Image ?? "");
+        },
+      }
+    );
+  };
+
   return (
     <div className="flex flex-col gap-2 w-full max-w-[820px]">
       {props.loading && (
@@ -45,6 +96,7 @@ export const ChatContainer = (props: {
             onThinkingStart={props.onThinkingStart}
             onThinkingStop={props.onThinkingStop}
             imageUrls={props.imageUrls}
+            onRetry={onRetry}
           >
             {msg.text}
           </SystemMessage>
@@ -112,6 +164,7 @@ const SystemMessage = (props: {
   onThinkingStart: () => void;
   onThinkingStop: () => void;
   imageUrls: string[];
+  onRetry: () => void;
 }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>();
 
@@ -217,6 +270,16 @@ const SystemMessage = (props: {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+      {props.message.text?.includes("is je afbeelding voor de social") && (
+        <div className="flex w-full justify-end mb-2">
+          <div
+            className="bg-stone-100 p-2 rounded-lg hover:bg-primary transition-all text-stone-400 hover:text-white cursor-pointer"
+            onClick={props.onRetry}
+          >
+            <RefreshCw className="  " size={14} />
           </div>
         </div>
       )}

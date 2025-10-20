@@ -1,13 +1,13 @@
 "use client";
 
+import { Loader } from "@/components/ui/loader";
 import { api } from "@/trpc/react";
+import { chat_messages } from "@generated/prisma";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { ChatContainer } from "./chat-container";
 import { Prompter } from "./prompter";
-import { chat_messages } from "@generated/prisma";
-import Image from "next/image";
-import { Loader } from "@/components/ui/loader";
 
 export const GeneratePost = (props: {
   onPostSelected: (title: string, post: string) => void;
@@ -145,7 +145,10 @@ export const GeneratePost = (props: {
             chatSessionId={chatSessionId!}
             thinking={!!thinking}
             onThinkingStart={() => setThinking(true)}
-            onThinkingStop={() => setThinking(false)}
+            onThinkingStop={() => {
+              setThinking(false);
+              refetchMessages();
+            }}
             imageUrls={imageUrls}
           />
         ) : initialPrompt ? (

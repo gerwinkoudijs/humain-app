@@ -34,12 +34,10 @@ export const generatePost = async (chatSessionId: string, text: string) => {
       \n\n
       Maak ook een korte tekst (printText) die op het kledingstuk geborduurd of gedrukt kan worden. Deze tekst moet kort, krachtig en grappig en relevant zijn voor de post en Yourstyle.
       \n\n
+      \n\n
       Maak ook een korte omschrijving (socialMediaImagePrompt) van de ideale social media image die bij deze post past. Geef dit in maximaal 50 woorden. 
-      De omschrijving moet duidelijk maken dat de afbeelding een realistische, uitgeknipte studio productfoto moet zijn van een persoon die een Yourstyle product draagt,
-      met een transparante achtergrond en een vlak ontwerp zonder texturen of schaduwen. De persoon moet gelukkig zijn en ontspannen glimlachen, met natuurlijke,
-       frisse uitstraling en heldere, natuurlijke belichting. De persoon kijkt naar de camera en moet iets gedraaid staan en ontspannen staan, niet te geposeerd. 
-      De compositie moet rustig en stijlvol zijn, met alleen de persoon, het product en de effen achtergrond zichtbaar. 
-      Plaats de persoon aan de rechterkant van het beeld (80% van links) en zorg ervoor dat ze van de taille omhoog zichtbaar is.
+      De omschrijving moet duidelijk maken dat de afbeelding een realistische, studio productfoto moet zijn van een persoon die een Yourstyle product draagt,
+      de omschrijving moet niet over de achtegrond gaan. 
       \n\n
       Hier is wat extra informatie over Yourstyle: ${yourstyleInfo} \n\n`;
 

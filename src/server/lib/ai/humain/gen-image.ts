@@ -1,8 +1,8 @@
 import { GoogleGenAI } from "@google/genai";
 import { Readable } from "stream";
 
-import { createUrlReadStream } from "@/lib/file";
-import OpenAI, { toFile } from "openai";
+// import { createUrlReadStream } from "@/lib/file";
+// import OpenAI, { toFile } from "openai";
 import { db } from "../../db";
 import { getHumainDesignerPrompt } from "./designer";
 import { processTemplate } from "./process-template";
@@ -17,7 +17,8 @@ export const generateImage = async (
     title: string;
     text: string;
     hashTags?: string[];
-  }
+  },
+  retry: boolean = false
 ) => {
   const chatSession = await db.chat_sessions.findUnique({
     where: { id: chatSessionId },
@@ -36,13 +37,21 @@ export const generateImage = async (
 
   const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_AI_API_KEY ?? "" });
 
-  const finalPrompt = getHumainDesignerPrompt(post.title, cta, printText);
+  const finalPrompt = getHumainDesignerPrompt(
+    chatSession,
+    prompt,
+    post.title,
+    cta,
+    printText
+  );
 
   await db.chat_messages.create({
     data: {
       chat_session_id: chatSessionId,
       role: "system",
-      text: "Ok, ik maak nu een passende afbeelding",
+      text: retry
+        ? "Ok, ik maak nu een nieuwe afbeelding"
+        : "Ok, ik maak nu een passende afbeelding",
       prompt: finalPrompt,
       type: "response",
     },
@@ -143,114 +152,114 @@ export const generateImage = async (
   });
 };
 
-export const generateImageOpenAi = async (
-  chatSessionId: string,
-  prompt: string,
-  fileUrls: string[],
-  cta: string,
-  printText: string,
-  post: {
-    title: string;
-    text: string;
-    hashTags?: string[];
-  }
-) => {
-  // await db.chat_messages.create({
-  //   data: {
-  //     chat_session_id: chatSessionId,
-  //     role: "user",
-  //     text: "Selected Social Post",
-  //     type: "prompt",
-  //     data: { post },
-  //   },
-  // });
+// export const generateImageOpenAi = async (
+//   chatSessionId: string,
+//   prompt: string,
+//   fileUrls: string[],
+//   cta: string,
+//   printText: string,
+//   post: {
+//     title: string;
+//     text: string;
+//     hashTags?: string[];
+//   }
+// ) => {
+//   // await db.chat_messages.create({
+//   //   data: {
+//   //     chat_session_id: chatSessionId,
+//   //     role: "user",
+//   //     text: "Selected Social Post",
+//   //     type: "prompt",
+//   //     data: { post },
+//   //   },
+//   // });
 
-  await db.chat_sessions.update({
-    where: { id: chatSessionId },
-    data: {
-      post_title: post.title,
-      post_text: post.text,
-      post_hashtags: post.hashTags?.join(" "),
-    },
-  });
+//   await db.chat_sessions.update({
+//     where: { id: chatSessionId },
+//     data: {
+//       post_title: post.title,
+//       post_text: post.text,
+//       post_hashtags: post.hashTags?.join(" "),
+//     },
+//   });
 
-  await db.chat_messages.create({
-    data: {
-      chat_session_id: chatSessionId,
-      role: "system",
-      text: "Ok, I will generate the image now",
-      prompt: prompt,
-      type: "response",
-    },
-  });
+//   await db.chat_messages.create({
+//     data: {
+//       chat_session_id: chatSessionId,
+//       role: "system",
+//       text: "Ok, I will generate the image now",
+//       prompt: prompt,
+//       type: "response",
+//     },
+//   });
 
-  const finalPrompt = getHumainDesignerPrompt(prompt, cta, printText);
+//   const finalPrompt = getHumainDesignerPrompt(chatSessionId prompt, cta, printText);
 
-  const openai = new OpenAI({ apiKey: process.env.OPEN_AI_SECRET ?? "" });
+//   const openai = new OpenAI({ apiKey: process.env.OPEN_AI_SECRET ?? "" });
 
-  let base64ImageResult: string | undefined = undefined;
+//   let base64ImageResult: string | undefined = undefined;
 
-  if (fileUrls?.length === 0) {
-    const response = await openai.images.generate({
-      model: "gpt-image-1",
-      prompt: finalPrompt,
-      quality: "high",
-      //size: "2048x2048",
-      size: "1024x1024",
-      moderation: "low",
-    });
+//   if (fileUrls?.length === 0) {
+//     const response = await openai.images.generate({
+//       model: "gpt-image-1",
+//       prompt: finalPrompt,
+//       quality: "high",
+//       //size: "2048x2048",
+//       size: "1024x1024",
+//       moderation: "low",
+//     });
 
-    base64ImageResult = response.data ? response.data[0].b64_json : undefined;
-    if (!base64ImageResult) {
-      await db.chat_messages.create({
-        data: {
-          chat_session_id: chatSessionId,
-          role: "system",
-          type: "error",
-          text: "Afbeelding genereren mislukt. Probeer het nog eens met een andere prompt.",
-        },
-      });
-      return "";
-    }
-  } else {
-    const images = await Promise.all(
-      fileUrls.map(
-        async (fileUrl) =>
-          await toFile(createUrlReadStream(fileUrl), null, {
-            type: "image/png",
-          })
-      )
-    );
+//     base64ImageResult = response.data ? response.data[0].b64_json : undefined;
+//     if (!base64ImageResult) {
+//       await db.chat_messages.create({
+//         data: {
+//           chat_session_id: chatSessionId,
+//           role: "system",
+//           type: "error",
+//           text: "Afbeelding genereren mislukt. Probeer het nog eens met een andere prompt.",
+//         },
+//       });
+//       return "";
+//     }
+//   } else {
+//     const images = await Promise.all(
+//       fileUrls.map(
+//         async (fileUrl) =>
+//           await toFile(createUrlReadStream(fileUrl), null, {
+//             type: "image/png",
+//           })
+//       )
+//     );
 
-    const response = await openai.images.edit({
-      model: "gpt-image-1",
-      prompt: finalPrompt,
-      image: images,
-      quality: "high",
-      //size: "2048x2048",
-      size: "1024x1024",
-    });
+//     const response = await openai.images.edit({
+//       model: "gpt-image-1",
+//       prompt: finalPrompt,
+//       image: images,
+//       quality: "high",
+//       //size: "2048x2048",
+//       size: "1024x1024",
+//     });
 
-    base64ImageResult = response.data ? response.data[0].b64_json : undefined;
-    if (!base64ImageResult) {
-      await db.chat_messages.create({
-        data: {
-          chat_session_id: chatSessionId,
-          role: "system",
-          type: "error",
-          text: "Afbeelding genereren mislukt. Probeer het nog eens met een andere prompt.",
-        },
-      });
-      return "";
-    }
-  }
+//     base64ImageResult = response.data ? response.data[0].b64_json : undefined;
+//     if (!base64ImageResult) {
+//       await db.chat_messages.create({
+//         data: {
+//           chat_session_id: chatSessionId,
+//           role: "system",
+//           type: "error",
+//           text: "Afbeelding genereren mislukt. Probeer het nog eens met een andere prompt.",
+//         },
+//       });
+//       return "";
+//     }
+//   }
 
-  await db.chat_sessions.update({
-    where: { id: chatSessionId },
-    data: {
-      image_base64: base64ImageResult,
-    },
-  });
+//   await db.chat_sessions.update({
+//     where: { id: chatSessionId },
+//     data: {
+//       image_base64: base64ImageResult,
+//     },
+//   });
 
-  return await processTemplate(chatSessionId);
-};
+//   return await processTemplate(chatSessionId);
+// };

@@ -54,9 +54,11 @@ export const processTemplate = async (chatSessionId: string) => {
       },
       {
         text: `
-- Plaats de persoon van de eerste afbeelding in de sjabloonafbeelding (tweede afbeelding) aan de rechterkant.
+- Plaats de persoon van de eerste afbeelding in de achtergrond-afbeelding (tweede afbeelding) aan de rechterkant.
+- De persoon moet goed zichtbaar zijn en niet uitgeknipt lijken, maar natuurlijk in de achtergrond passen. Maar pas de achtergrond niet aan.
+- De persoon mag geen outline of rand hebben, maar moet vloeiend in de achtergrond overlopen. (!)
 - Gebruik een afbeeldingsgrootte van 1024x1024.
-- Gebruik de sjabloonafbeelding om de beeldverhouding en de uitvoerresolutie te bepalen.
+- Gebruik de achtergrond-afbeelding om de beeldverhouding en de uitvoerresolutie te bepalen.
 - ONTHOUD: DE BEELDVERHOUDING MOET VIERKANT ZIJN
 `,
       },

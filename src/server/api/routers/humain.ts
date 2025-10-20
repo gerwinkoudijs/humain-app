@@ -40,6 +40,7 @@ export const humainRouter = createTRPCRouter({
           text: z.string(),
           hashTags: z.array(z.string()).optional(),
         }),
+        retry: z.boolean().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -53,7 +54,8 @@ export const humainRouter = createTRPCRouter({
           title: input.post.title,
           text: input.post.text,
           hashTags: input.post.hashTags,
-        }
+        },
+        input.retry ?? false
       );
 
       return {

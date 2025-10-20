@@ -1,4 +1,8 @@
+import { chat_sessions } from "@generated/prisma";
+
 export const getHumainDesignerPrompt = (
+  chatSession: chat_sessions,
+  prompt: string,
   socialPostText: string,
   cta: string,
   printText: string
@@ -14,9 +18,16 @@ Yourstyle is the expert in personalising (by embroiding and prints) all kinds of
 **importance: normal**
 
 It should genereate a matching social media image for the social media post text prompt I provide below.
+The main instruction of the image is as follows: "${prompt}"
 
-The image should feature a realistic, cut-out studio product shot featuring a single person positioned on the right side (placed on 80% from the left) of the frame, positioned from the waist up. The person is wearing a Yourstyle product. Person is happy. The lighting is natural and crisp.
-The person is looking slightly to the left. And standing relaxed, not too posed. Turned slightly to the left, not straight to the camera.
+The image should feature a realistic, cut-out studio product shot featuring a single person 
+${
+  [2, 3, 4].includes(chatSession.template ?? 0)
+    ? "positioned on the middle of the frame, positioned from the waist up. The person is looking slightly to the right. And standing relaxed, not too posed. Turned slightly to the left, not straight to the camera."
+    : "positioned on the right side (placed on 80% from the left) of the frame, positioned from the waist up.  The person is looking slightly to the left. And standing relaxed, not too posed. Turned slightly to the left, not straight to the camera."
+}
+
+The person is wearing a Yourstyle product. Person is happy and relaxed. The lighting is natural and crisp. Naturally posed.
 
 Background: the first provided image as the background, DO NOT CHANGE THIS IMAGE
 

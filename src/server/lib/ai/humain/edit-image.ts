@@ -96,7 +96,7 @@ ${prompt}
         role: "system",
         type: "error",
         text: "Afbeelding genereren mislukt. Probeer het nog eens met een andere prompt.",
-        data: aiResult1?.text,
+        data: JSON.stringify(aiResult1?.candidates),
       },
     });
     return "";
@@ -141,7 +141,7 @@ ${prompt}
       role: "system",
       type: "error",
       text: "Afbeelding genereren mislukt. Probeer het nog eens met een andere prompt.",
-      data: aiResult1?.text,
+      data: JSON.stringify(aiResult1?.candidates),
     },
   });
 };
