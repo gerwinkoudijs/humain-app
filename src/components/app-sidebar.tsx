@@ -51,7 +51,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props} className="bg-stone-100">
       <SidebarHeader className="bg-stone-100">
-        <div className="px-2 pt-2 font-semibold">Yourstyle AI</div>
+        <div className="flex font-semibold w-full justify-start items-center pt-2 py-1 px-2 gap-2">
+          <div className="">Yourstyle</div>
+          <div className="bg-primary text-white rounded-lg px-3 py-1.5">AI</div>
+        </div>
       </SidebarHeader>
       <SidebarContent className="gap-0 bg-stone-100">
         {/* We create a collapsible SidebarGroup for each parent. */}
