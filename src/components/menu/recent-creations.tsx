@@ -7,6 +7,8 @@ import Link from "next/link";
 import { Trash2 } from "lucide-react";
 import { InlineLoader, Loader } from "../ui/loader";
 import { chat_sessions } from "@generated/prisma";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { formatDistanceToNow } from "date-fns";
 
 const RecentCreationItem = ({
   item,
@@ -28,30 +30,41 @@ const RecentCreationItem = ({
     });
 
   return (
-    <SidebarMenuItem key={item.id}>
-      <SidebarMenuButton
-        asChild
-        isActive={isActive}
-        className="data-[active=true]:bg-stone-200 hover:bg-stone-200 data-[active=true]:font-normal"
-      >
-        <div className="flex items-center justify-between group/item">
-          <Link
-            href={`/sessions/${item.id}`}
-            className="w-full  whitespace-nowrap truncate text-ellipsis"
+    <Tooltip>
+      <TooltipTrigger className="w-full flex items-center justify-start">
+        <SidebarMenuItem key={item.id} className="w-full" title="">
+          <SidebarMenuButton
+            asChild
+            isActive={isActive}
+            className="data-[active=true]:bg-stone-200 hover:bg-stone-200 data-[active=true]:font-normal w-full"
+            title=""
           >
-            {item.title}
-          </Link>
-          {isPending ? (
-            <InlineLoader />
-          ) : (
-            <Trash2
-              className="hidden group-hover/item:block transition-all text-stone-500 hover:text-red-600 cursor-pointer"
-              onClick={() => deleteSession({ sessionId: item.id })}
-            />
-          )}
-        </div>
-      </SidebarMenuButton>
-    </SidebarMenuItem>
+            <div className="flex items-center justify-between group/item relative">
+              <Link href={`/sessions/${item.id}`} className="w-full" title="">
+                <div className="text-left whitespace-nowrap truncate max-w-[200px] w-full">
+                  {item.title}
+                </div>
+              </Link>
+              {isPending ? (
+                <InlineLoader />
+              ) : (
+                <Trash2
+                  className="absolute right-1 hidden group-hover/item:block transition-all text-stone-500 hover:text-red-600 cursor-pointer"
+                  onClick={() => deleteSession({ sessionId: item.id })}
+                />
+              )}
+            </div>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </TooltipTrigger>
+      <TooltipContent
+        side="right"
+        sideOffset={12}
+        className="bg-white text-black border [&_svg]:hidden!"
+      >
+        {formatDistanceToNow(item.created_at)} ago
+      </TooltipContent>
+    </Tooltip>
   );
 };
 
@@ -63,6 +76,14 @@ export const RecentCreations = () => {
     {},
     { refetchInterval: 10000 }
   );
+
+  if (isLoading) {
+    return (
+      <div className="w-full flex items-center justify-start px-2">
+        <InlineLoader />
+      </div>
+    );
+  }
 
   return (data ?? []).map((item) => (
     <RecentCreationItem

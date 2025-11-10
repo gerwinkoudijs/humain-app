@@ -83,7 +83,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         <SidebarMenuButton
                           asChild
                           isActive={path.startsWith(item.url)}
-                          className="data-[active=true]:bg-stone-200 data-[active=true]:font-normal"
+                          className="data-[active=true]:bg-stone-200 hover:bg-stone-200 data-[active=true]:font-normal"
                         >
                           <Link href={item.url}>{item.title}</Link>
                         </SidebarMenuButton>
