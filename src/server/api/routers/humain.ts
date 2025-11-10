@@ -31,7 +31,7 @@ export const humainRouter = createTRPCRouter({
     .input(
       z.object({
         chatSessionId: z.string().min(1),
-        prompt: z.string().min(1),
+        //prompt: z.string().min(1),
         imageUrls: z.array(z.string()),
         cta: z.string().min(1),
         printText: z.string().min(1),
@@ -46,7 +46,7 @@ export const humainRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const result = await generateImage(
         input.chatSessionId,
-        input.prompt,
+        //input.prompt,
         input.imageUrls,
         input.cta,
         input.printText,

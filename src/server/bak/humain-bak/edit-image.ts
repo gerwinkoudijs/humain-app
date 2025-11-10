@@ -3,7 +3,7 @@ import { put } from "@vercel/blob";
 import { createReadStream } from "fs";
 import path from "path";
 import { Readable } from "stream";
-import { db } from "../../db";
+import { db } from "../../lib/db";
 
 export const editImage = async (
   chatSessionId: string,

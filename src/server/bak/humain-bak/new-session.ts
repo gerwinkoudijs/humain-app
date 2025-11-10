@@ -1,5 +1,5 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { db } from "../../db";
+import { db } from "../../lib/db";
 
 export const createNewSession = async (prompt: string, template: number) => {
   // Create new chat session and message

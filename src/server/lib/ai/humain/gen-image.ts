@@ -6,10 +6,11 @@ import { Readable } from "stream";
 import { db } from "../../db";
 import { getHumainDesignerPrompt } from "./designer";
 import { processTemplate } from "./process-template";
+import { storeImage } from "../../blob";
 
 export const generateImage = async (
   chatSessionId: string,
-  prompt: string,
+  //prompt: string,
   fileUrls: string[],
   cta: string,
   printText: string,
@@ -39,8 +40,7 @@ export const generateImage = async (
 
   const finalPrompt = getHumainDesignerPrompt(
     chatSession,
-    prompt,
-    post.title,
+    post.text,
     cta,
     printText
   );
@@ -122,14 +122,17 @@ export const generateImage = async (
         },
       });
 
+      // const blobIntermediate = await storeImage(chatSessionId, base64ImageData);
+
       const blobUrl = await processTemplate(chatSessionId);
 
       await db.chat_messages.create({
         data: {
           chat_session_id: chatSessionId,
           role: "system",
+          //text: "Hier is je afbeelding voor de social: " + blobIntermediate.url,
           text: "Hier is je afbeelding voor de social:",
-          prompt: prompt,
+          //prompt: prompt,
           data: blobUrl,
           data_type: "image_url",
           type: "response",

@@ -47,7 +47,7 @@ export const ChatContainer = (props: {
     await generateVisual(
       {
         chatSessionId: props.chatSessionId!,
-        prompt: post.socialMediaImagePrompt,
+        //prompt: post.socialMediaImagePrompt,
         imageUrls: props.imageUrls,
         cta: post.ctaText,
         printText: post.printText,
@@ -218,7 +218,7 @@ const SystemMessage = (props: {
                 await generateVisual(
                   {
                     chatSessionId: props.chatSessionId!,
-                    prompt: post.socialMediaImagePrompt,
+                    //prompt: post.socialMediaImagePrompt,
                     imageUrls: props.imageUrls,
                     cta: post.ctaText,
                     printText: post.printText,

@@ -1,5 +1,5 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { generateObject } from "ai";
+import { generateObject, generateText } from "ai";
 import { z } from "zod";
 import { yourstyleInfo } from "../../../../data/yourstyle_info";
 import { db } from "../../db";
@@ -35,10 +35,6 @@ export const generatePost = async (chatSessionId: string, text: string) => {
       Maak ook een korte tekst (printText) die op het kledingstuk geborduurd of gedrukt kan worden. Deze tekst moet kort, krachtig en grappig en relevant zijn voor de post en Yourstyle.
       \n\n
       \n\n
-      Maak ook een korte omschrijving (socialMediaImagePrompt) van de ideale social media image die bij deze post past. Geef dit in maximaal 50 woorden. 
-      De omschrijving moet duidelijk maken dat de afbeelding een realistische, studio productfoto moet zijn van een persoon die een Yourstyle product draagt,
-      de omschrijving moet niet over de achtegrond gaan. 
-      \n\n
       Hier is wat extra informatie over Yourstyle: ${yourstyleInfo} \n\n`;
 
   await db.chat_messages.create({
@@ -58,7 +54,7 @@ export const generatePost = async (chatSessionId: string, text: string) => {
           title: z.string(),
           text: z.string(),
           hashTags: z.array(z.string()),
-          socialMediaImagePrompt: z.string(),
+          //socialMediaImagePrompt: z.string(),
           ctaText: z.string(),
           printText: z.string(),
         })

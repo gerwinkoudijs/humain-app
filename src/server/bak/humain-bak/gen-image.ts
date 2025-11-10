@@ -4,7 +4,7 @@ import { Readable } from "stream";
 
 import { createUrlReadStream } from "@/lib/file";
 import OpenAI, { toFile } from "openai";
-import { db } from "../../db";
+import { db } from "../../lib/db";
 import { getHumainDesignerPrompt } from "./designer";
 import { editImage } from "./edit-image";
 

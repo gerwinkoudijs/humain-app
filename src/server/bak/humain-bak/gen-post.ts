@@ -1,8 +1,8 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { generateObject } from "ai";
 import { z } from "zod";
-import { yourstyleInfo } from "../../../../data/yourstyle_info";
-import { db } from "../../db";
+import { yourstyleInfo } from "../../../data/yourstyle_info";
+import { db } from "../../lib/db";
 
 const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_AI_API_KEY ?? "",
