@@ -4,6 +4,19 @@ export const listChatSessions = async () => {
   return await db.chat_sessions.findMany({
     orderBy: { created_at: "desc" },
     take: 30,
+    select: {
+      id: true,
+      title: true,
+      user: true,
+      post_title: true,
+      post_text: true,
+      post_hashtags: true,
+      image_base64: false,
+      template: true,
+      created_at: true,
+      updated_at: true,
+      chat_messages: true,
+    },
   });
 };
 
