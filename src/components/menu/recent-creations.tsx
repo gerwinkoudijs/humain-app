@@ -12,7 +12,7 @@ const RecentCreationItem = ({
   item,
   isActive,
 }: {
-  item: chat_sessions;
+  item: Omit<chat_sessions, "image_base64">;
   isActive: boolean;
 }) => {
   const utils = api.useUtils();
