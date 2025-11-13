@@ -1,5 +1,5 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { generateObject, generateText } from "ai";
+import { generateObject } from "ai";
 import { z } from "zod";
 import { yourstyleInfo } from "../../../../data/yourstyle_info";
 import { db } from "../../db";
@@ -8,13 +8,26 @@ const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_AI_API_KEY ?? "",
 });
 
+const postSchema = z.object({
+  posts: z.array(
+    z.object({
+      title: z.string(),
+      text: z.string(),
+      hashTags: z.array(z.string()),
+      //socialMediaImagePrompt: z.string(),
+      ctaText: z.string(),
+      printText: z.string(),
+    })
+  ),
+});
+
 export const generatePost = async (chatSessionId: string, text: string) => {
   // const summary = await generateObject({
   //   schema: z.object({
   //     summary: z.string(),
   //   }),
   //   //model: google(aiModel),
-  //   model: google("gemini-2.5-flash-lite"),
+  //   model: google("gemini-2.5-flash-latest"),
   //   providerOptions: {
   //     google: {
   //       thinkingConfig: {
@@ -47,19 +60,8 @@ export const generatePost = async (chatSessionId: string, text: string) => {
     },
   });
 
-  const result = await generateObject({
-    schema: z.object({
-      posts: z.array(
-        z.object({
-          title: z.string(),
-          text: z.string(),
-          hashTags: z.array(z.string()),
-          //socialMediaImagePrompt: z.string(),
-          ctaText: z.string(),
-          printText: z.string(),
-        })
-      ),
-    }),
+  const result = await generateObject<z.infer<typeof postSchema>>({
+    schema: postSchema,
     //model: google(aiModel),
     model: google("gemini-2.5-flash"),
     providerOptions: {

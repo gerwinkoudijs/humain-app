@@ -21,78 +21,84 @@ model settings {
 model chat_sessions {
   id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title         String?         @db.VarChar
-  post_title    String?         @db.VarChar
-  post_text     String?         @db.Text
-  post_hashtags String?         @db.VarChar
-  image_base64  String?         @db.VarChar
-  template      Int?            @default(1) @db.Integer
   created_at    DateTime        @default(now()) @db.Timestamp(6)
   updated_at    DateTime        @default(now()) @db.Timestamp(6)
-  chat_messages chat_messages[]
+  post_hashtags String?         @db.VarChar
+  post_text     String?
+  post_title    String?         @db.VarChar
+  image_base64  String?         @db.VarChar
+  template      Int?            @default(1)
   userId        String?         @db.Uuid
-  user          User?           @relation(fields: [userId], references: [id])
+  chat_messages chat_messages[]
+  user          User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([created_at], map: "idx_chat_sessions_created_at")
 }
 
 model chat_messages {
-  id              String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  chat_session_id String  @db.Uuid
-  role            String  @db.VarChar
-  text            String? @db.Text
-  prompt          String? @db.Text
-  data            Json?   @default("{}")
-  data_type       String? @db.VarChar
-  type            String? @db.VarChar
-  token_count     Int?    @default(0)
-
-  created_at DateTime @default(now()) @db.Timestamp(6)
-  updated_at DateTime @default(now()) @db.Timestamp(6)
-
-  chat_session chat_sessions @relation(fields: [chat_session_id], references: [id], onDelete: Cascade)
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  chat_session_id String        @db.Uuid
+  role            String        @db.VarChar
+  text            String?
+  data            Json?         @default("{}")
+  type            String?       @db.VarChar
+  token_count     Int?          @default(0)
+  created_at      DateTime      @default(now()) @db.Timestamp(6)
+  updated_at      DateTime      @default(now()) @db.Timestamp(6)
+  prompt          String?
+  data_type       String?       @db.VarChar
+  chat_session    chat_sessions @relation(fields: [chat_session_id], references: [id], onDelete: Cascade)
 
   @@index([created_at], map: "idx_chat_messages_created_at")
   @@index([chat_session_id], map: "idx_chat_messages_chat_session_id")
 }
 
 model Account {
-  id                String  @id @default(cuid())
-  userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId            String  @db.Uuid
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId], map: "idx_account_user_id")
 }
 
 model Session {
-  id           String   @id @default(cuid())
   sessionToken String   @unique
-  userId       String
   expires      DateTime
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String   @db.Uuid
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isImpersonating Boolean @default(false)
+  originalAdminSessionToken String? @db.VarChar
+
+  @@index([userId], map: "idx_session_user_id")
+  @@index([originalAdminSessionToken], map: "idx_session_original_admin")
 }
 
 model User {
-  id            String          @id @default(cuid())
   name          String?
   email         String?         @unique
   emailVerified DateTime?
   image         String?
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId      String?         @db.Uuid
   accounts      Account[]
   sessions      Session[]
+  tenant        Tenant?         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   chatSessions  chat_sessions[]
-  roles         UserRole[]
-  tenants       Tenant[]
+  role          Role            @default(USER)
+
+  @@index([tenantId], map: "idx_user_tenant_id")
 }
 
 model VerificationToken {
@@ -104,22 +110,17 @@ model VerificationToken {
 }
 
 model Tenant {
-  id   String @id @default(cuid())
-  name String
-  users User[]
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name               String
+  slug               String   @unique
+  monthlyPostLimit   Int      @default(100)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  users              User[]
 }
 
-model Role {
-  id   String @id @default(cuid())
-  name String @unique
-  users UserRole[]
-}
-
-model UserRole {
-  userId String
-  roleId String
-  user   User   @relation(fields: [userId], references: [id])
-  role   Role   @relation(fields: [roleId], references: [id])
-
-  @@id([userId, roleId])
+enum Role {
+  OWNER
+  ADMIN
+  USER
 }

@@ -1,13 +1,10 @@
 import { Suspense } from "react";
+import { Profile } from "@/features/settings/profile";
 
-import { Settings } from "@/features/settings/settings";
-
-export default function Home() {
+export default function SettingsPage() {
   return (
-    <>...</>
-    // <Suspense>
-    //   {/* <Settings /> */}
-    //   ...
-    // </Suspense>
+    <Suspense>
+      <Profile />
+    </Suspense>
   );
 }

@@ -14,7 +14,7 @@ const RecentCreationItem = ({
   item,
   isActive,
 }: {
-  item: Omit<chat_sessions, "image_base64">;
+  item: Omit<chat_sessions, "image_base64" | "userId">;
   isActive: boolean;
 }) => {
   const utils = api.useUtils();

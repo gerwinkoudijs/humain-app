@@ -2,6 +2,12 @@ import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 import { settingsRouter } from "./routers/settings";
 import { humainRouter } from "./routers/humain";
 import { chatSessionsRouter } from "./routers/chat-sessions";
+import { usersRouter } from "./routers/users";
+import { userRouter } from "@/trpc/user";
+import { tenantsRouter } from "./routers/tenants";
+import { dashboardRouter } from "./routers/dashboard";
+import { impersonationRouter } from "./routers/impersonation";
+import { userDashboardRouter } from "./routers/user-dashboard";
 
 /**
  * This is the primary router for your server.
@@ -12,6 +18,12 @@ export const appRouter = createTRPCRouter({
   settings: settingsRouter,
   humain: humainRouter,
   chatSessions: chatSessionsRouter,
+  users: usersRouter,
+  user: userRouter,
+  tenants: tenantsRouter,
+  dashboard: dashboardRouter,
+  impersonation: impersonationRouter,
+  userDashboard: userDashboardRouter,
 });
 
 // export type definition of API

@@ -6,9 +6,12 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
+import { authOptions } from "@/lib/auth";
+import { db } from "@/server/lib/db";
 import { transformer } from "@/trpc/transformer";
-import { initTRPC } from "@trpc/server";
-import superjson from "superjson";
+import { Role } from "@generated/prisma";
+import { initTRPC, TRPCError } from "@trpc/server";
+import { getServerSession } from "next-auth";
 import { ZodError } from "zod";
 
 /**
@@ -24,7 +27,10 @@ import { ZodError } from "zod";
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
+  const session = await getServerSession(authOptions);
   return {
+    db,
+    session,
     ...opts,
   };
 };
@@ -70,6 +76,7 @@ export const createCallerFactory = t.createCallerFactory;
  * @see https://trpc.io/docs/router
  */
 export const createTRPCRouter = t.router;
+export const router = t.router;
 
 /**
  * Middleware for timing procedure execution and adding an artificial delay in development.
@@ -102,3 +109,42 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * are logged in.
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
+
+const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
+  if (!ctx.session || !ctx.session.user) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user: ctx.session.user },
+    },
+  });
+});
+
+export const protectedProcedure = t.procedure
+  .use(enforceUserIsAuthed)
+  .use(timingMiddleware);
+
+const adminOnly = t.middleware(({ ctx, next }) => {
+  if (
+    !ctx.session ||
+    !ctx.session.user ||
+    (ctx.session.user.role !== Role.ADMIN &&
+      ctx.session.user.role !== Role.OWNER)
+  ) {
+    throw new TRPCError({ code: "FORBIDDEN" });
+  }
+
+  return next({
+    ctx: {
+      session: { ...ctx.session, user: ctx.session.user },
+    },
+  });
+});
+
+export const adminProcedure = t.procedure
+  .use(enforceUserIsAuthed)
+  .use(adminOnly)
+  .use(timingMiddleware);

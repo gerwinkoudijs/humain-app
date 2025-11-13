@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { editImage } from "@/server/lib/ai/humain/edit-image";
 import { generatePost } from "@/server/lib/ai/humain/gen-post";
 import { createNewSession } from "@/server/lib/ai/humain/new-session";
 import { generateImage } from "@/server/lib/ai/humain/gen-image";
 
 export const humainRouter = createTRPCRouter({
-  createNewSession: publicProcedure
+  createNewSession: protectedProcedure
     .input(
       z.object({
         prompt: z.string().min(1),
@@ -15,9 +15,13 @@ export const humainRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      return await createNewSession(input.prompt, input.template);
+      return await createNewSession(
+        ctx.session?.user?.id || "anonymous",
+        input.prompt,
+        input.template
+      );
     }),
-  generatePost: publicProcedure
+  generatePost: protectedProcedure
     .input(
       z.object({
         chatSessionId: z.string().min(1),
@@ -27,7 +31,7 @@ export const humainRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return await generatePost(input.chatSessionId, input.prompt);
     }),
-  generateImage: publicProcedure
+  generateImage: protectedProcedure
     .input(
       z.object({
         chatSessionId: z.string().min(1),
@@ -62,7 +66,7 @@ export const humainRouter = createTRPCRouter({
         base64Image: result,
       };
     }),
-  editImage: publicProcedure
+  editImage: protectedProcedure
     .input(
       z.object({
         chatSessionId: z.string().min(1),
@@ -81,7 +85,7 @@ export const humainRouter = createTRPCRouter({
         imageUrl: result,
       };
     }),
-  // generateImageStep2: publicProcedure
+  // generateImageStep2: protectedProcedure
   //   .input(
   //     z.object({
   //       imageBase64: z.string(),

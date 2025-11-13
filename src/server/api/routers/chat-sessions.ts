@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import {
   deletetChatSession,
   listChatSessionMessages,
@@ -8,13 +8,13 @@ import {
 } from "@/server/lib/chat/chat-sessions";
 
 export const chatSessionsRouter = createTRPCRouter({
-  listSessions: publicProcedure
+  listSessions: protectedProcedure
     .input(z.object({}))
     .query(async ({ ctx, input }) => {
       return await listChatSessions();
     }),
 
-  deleteSession: publicProcedure
+  deleteSession: protectedProcedure
     .input(
       z.object({
         sessionId: z.string().min(1),
@@ -24,7 +24,7 @@ export const chatSessionsRouter = createTRPCRouter({
       return await deletetChatSession(input.sessionId);
     }),
 
-  listMessages: publicProcedure
+  listMessages: protectedProcedure
     .input(
       z.object({
         sessionId: z.string().min(1),
