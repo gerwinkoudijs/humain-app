@@ -16,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { PageLoader } from "@/components/ui/page-loader";
 
 const profileSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -58,7 +59,7 @@ export default function ProfilePage() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <PageLoader />;
   }
 
   if (!user) {

@@ -18,6 +18,7 @@ import { Building, Edit, Trash2, Eye } from "lucide-react";
 import { CreateTenantDialog } from "./_components/create-tenant-dialog";
 import { EditTenantDialog } from "./_components/edit-tenant-dialog";
 import Link from "next/link";
+import { PageLoader } from "@/components/ui/page-loader";
 
 export default function TenantsPage() {
   const {
@@ -53,11 +54,7 @@ export default function TenantsPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-lg">Loading...</div>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   if (currentUser?.role !== Role.ADMIN) {
@@ -78,9 +75,7 @@ export default function TenantsPage() {
             <Building className="h-8 w-8" />
             Klantenbeheer
           </h1>
-          <p className="text-gray-500 mt-1">
-            Beheer klanten en hun gebruikers
-          </p>
+          <p className="text-gray-500 mt-1">Beheer klanten en hun gebruikers</p>
         </div>
         <CreateTenantDialog onSuccess={() => refetch()} />
       </div>
@@ -99,7 +94,10 @@ export default function TenantsPage() {
           <TableBody>
             {tenants?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-gray-500">
+                <TableCell
+                  colSpan={5}
+                  className="text-center py-8 text-gray-500"
+                >
                   Geen klanten gevonden. Maak je eerste klant aan.
                 </TableCell>
               </TableRow>
@@ -128,7 +126,11 @@ export default function TenantsPage() {
                   <TableCell>
                     <div className="flex justify-end gap-2">
                       <Link href={`/admin/tenants/${tenant.id}`}>
-                        <Button variant="ghost" size="sm" title="Bekijk details">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          title="Bekijk details"
+                        >
                           <Eye className="h-4 w-4" />
                         </Button>
                       </Link>

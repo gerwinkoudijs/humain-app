@@ -14,7 +14,16 @@ import { Badge } from "@/components/ui/badge";
 import { Role } from "@generated/prisma";
 import { toast } from "sonner";
 import { useState } from "react";
-import { ArrowLeft, Building, Edit, Trash2, UserPlus, Users, UserCog, TrendingUp } from "lucide-react";
+import {
+  ArrowLeft,
+  Building,
+  Edit,
+  Trash2,
+  UserPlus,
+  Users,
+  UserCog,
+  TrendingUp,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreateUserDialog } from "../../users/_components/create-user-dialog";
 import { EditUserDialog } from "../../users/_components/edit-user-dialog";
@@ -22,6 +31,7 @@ import { EditTenantDialog } from "../_components/edit-tenant-dialog";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useImpersonation } from "@/hooks/use-impersonation";
+import { PageLoader } from "@/components/ui/page-loader";
 
 export default function TenantDetailPage() {
   const params = useParams();
@@ -69,9 +79,7 @@ export default function TenantDetailPage() {
 
   const handleDelete = (id: string, email: string | null) => {
     if (
-      confirm(
-        `Weet je zeker dat je gebruiker "${email}" wilt verwijderen?`
-      )
+      confirm(`Weet je zeker dat je gebruiker "${email}" wilt verwijderen?`)
     ) {
       deleteUser.mutate({ id });
     }
@@ -91,11 +99,7 @@ export default function TenantDetailPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-lg">Loading...</div>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   if (!tenant) {
@@ -144,7 +148,8 @@ export default function TenantDetailPage() {
               </code>
             </p>
             <p className="text-sm text-gray-500 mt-2">
-              Aangemaakt op {new Date(tenant.createdAt).toLocaleDateString("nl-NL")}
+              Aangemaakt op{" "}
+              {new Date(tenant.createdAt).toLocaleDateString("nl-NL")}
             </p>
           </div>
           <Button
@@ -168,16 +173,20 @@ export default function TenantDetailPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold">
-              {tenant.postsThisMonth}
-            </p>
+            <p className="text-3xl font-bold">{tenant.postsThisMonth}</p>
             <p className="text-xs text-gray-500 mt-1">
               van {tenant.monthlyPostLimit} limiet
             </p>
           </CardContent>
         </Card>
 
-        <Card className={tenant.postsThisMonth >= tenant.monthlyPostLimit ? "border-red-500" : ""}>
+        <Card
+          className={
+            tenant.postsThisMonth >= tenant.monthlyPostLimit
+              ? "border-red-500"
+              : ""
+          }
+        >
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-500">
               Gebruik
@@ -188,7 +197,11 @@ export default function TenantDetailPage() {
               <div className="flex justify-between text-sm">
                 <span>Percentage</span>
                 <span className="font-semibold">
-                  {((tenant.postsThisMonth / tenant.monthlyPostLimit) * 100).toFixed(1)}%
+                  {(
+                    (tenant.postsThisMonth / tenant.monthlyPostLimit) *
+                    100
+                  ).toFixed(1)}
+                  %
                 </span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
@@ -264,7 +277,10 @@ export default function TenantDetailPage() {
           <TableBody>
             {tenant.users.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-8 text-gray-500">
+                <TableCell
+                  colSpan={4}
+                  className="text-center py-8 text-gray-500"
+                >
                   Geen gebruikers gevonden. Voeg de eerste gebruiker toe.
                 </TableCell>
               </TableRow>
@@ -272,7 +288,9 @@ export default function TenantDetailPage() {
               tenant.users.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell className="font-medium">
-                    {user.name || <span className="text-gray-400 italic">Geen naam</span>}
+                    {user.name || (
+                      <span className="text-gray-400 italic">Geen naam</span>
+                    )}
                   </TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>

@@ -11,7 +11,7 @@ export const chatSessionsRouter = createTRPCRouter({
   listSessions: protectedProcedure
     .input(z.object({}))
     .query(async ({ ctx, input }) => {
-      return await listChatSessions();
+      return await listChatSessions(ctx.session.user.id);
     }),
 
   deleteSession: protectedProcedure

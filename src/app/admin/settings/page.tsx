@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { Building, Settings2 } from "lucide-react";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { PageLoader } from "@/components/ui/page-loader";
 
 const tenantSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -77,7 +78,7 @@ export default function TenantsPage() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <PageLoader />;
   }
 
   if (currentUser?.role !== Role.ADMIN) {

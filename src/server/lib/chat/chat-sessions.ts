@@ -1,6 +1,6 @@
 import { db } from "../db";
 
-export const listChatSessions = async () => {
+export const listChatSessions = async (userId: string) => {
   return await db.chat_sessions.findMany({
     orderBy: { created_at: "desc" },
     take: 30,
@@ -16,6 +16,9 @@ export const listChatSessions = async () => {
       created_at: true,
       updated_at: true,
       chat_messages: true,
+    },
+    where: {
+      userId,
     },
   });
 };

@@ -20,6 +20,7 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
+import { PageLoader } from "@/components/ui/page-loader";
 
 const COLORS = [
   "#3b82f6", // blue
@@ -37,11 +38,7 @@ export default function DashboardPage() {
   const { data: currentUser } = api.user.me.useQuery();
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-lg">Loading...</div>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   if (currentUser?.role !== Role.ADMIN) {

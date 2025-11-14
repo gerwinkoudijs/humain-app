@@ -50,7 +50,7 @@ import { useImpersonation } from "@/hooks/use-impersonation";
 
 // This is sample data.
 const data = {
-  version: "0.1.2",
+  version: "0.1.3",
   navMain: [
     {
       title: "Menu",

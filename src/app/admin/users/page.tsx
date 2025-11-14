@@ -25,6 +25,7 @@ import { Users, Edit, Trash2, Filter } from "lucide-react";
 import { CreateUserDialog } from "./_components/create-user-dialog";
 import { EditUserDialog } from "./_components/edit-user-dialog";
 import Link from "next/link";
+import { PageLoader } from "@/components/ui/page-loader";
 
 export default function UsersPage() {
   const [selectedTenantId, setSelectedTenantId] = useState<string | undefined>(
@@ -59,7 +60,9 @@ export default function UsersPage() {
   });
 
   const handleDelete = (id: string, email: string | null) => {
-    if (confirm(`Weet je zeker dat je gebruiker "${email}" wilt verwijderen?`)) {
+    if (
+      confirm(`Weet je zeker dat je gebruiker "${email}" wilt verwijderen?`)
+    ) {
       deleteUser.mutate({ id });
     }
   };
@@ -78,11 +81,7 @@ export default function UsersPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-lg">Loading...</div>
-      </div>
-    );
+    return <PageLoader />;
   }
 
   if (currentUser?.role !== Role.ADMIN && currentUser?.role !== Role.OWNER) {
@@ -156,7 +155,10 @@ export default function UsersPage() {
           <TableBody>
             {users?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-gray-500">
+                <TableCell
+                  colSpan={5}
+                  className="text-center py-8 text-gray-500"
+                >
                   {selectedTenantId
                     ? "Geen gebruikers gevonden voor deze klant."
                     : "Geen gebruikers gevonden."}

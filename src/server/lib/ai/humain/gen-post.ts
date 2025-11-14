@@ -7,20 +7,6 @@ import { db } from "../../db";
 const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_AI_API_KEY ?? "",
 });
-
-const postSchema = z.object({
-  posts: z.array(
-    z.object({
-      title: z.string(),
-      text: z.string(),
-      hashTags: z.array(z.string()),
-      //socialMediaImagePrompt: z.string(),
-      ctaText: z.string(),
-      printText: z.string(),
-    })
-  ),
-});
-
 export const generatePost = async (chatSessionId: string, text: string) => {
   // const summary = await generateObject({
   //   schema: z.object({
@@ -60,8 +46,19 @@ export const generatePost = async (chatSessionId: string, text: string) => {
     },
   });
 
-  const result = await generateObject<z.infer<typeof postSchema>>({
-    schema: postSchema,
+  const result = await generateObject({
+    schema: z.object({
+      posts: z.array(
+        z.object({
+          title: z.string(),
+          text: z.string(),
+          hashTags: z.array(z.string()),
+          //socialMediaImagePrompt: z.string(),
+          ctaText: z.string(),
+          printText: z.string(),
+        })
+      ),
+    }),
     //model: google(aiModel),
     model: google("gemini-2.5-flash"),
     providerOptions: {
@@ -74,6 +71,8 @@ export const generatePost = async (chatSessionId: string, text: string) => {
     prompt,
   });
 
+  console.log("Generated posts:", JSON.stringify(result));
+
   await db.chat_messages.create({
     data: {
       chat_session_id: chatSessionId,
@@ -81,7 +80,7 @@ export const generatePost = async (chatSessionId: string, text: string) => {
       text,
       prompt,
       type: "log",
-      token_count: result.usage.promptTokens,
+      token_count: result.usage.inputTokens,
     },
   });
 
@@ -94,7 +93,7 @@ export const generatePost = async (chatSessionId: string, text: string) => {
       data: { posts: result.object.posts },
       // data            Json?   @default("{}") TODO
       type: "response",
-      token_count: result.usage.completionTokens,
+      token_count: result.usage.outputTokens,
     },
   });
 

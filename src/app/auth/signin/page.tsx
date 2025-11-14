@@ -177,17 +177,7 @@ export default function SignIn() {
       </div>
 
       {/* Right Side - Visual */}
-      <div className="hidden lg:flex flex-1 bg-gradient-to-br from-blue-100 via-blue-50 to-cyan-50 items-center justify-center p-12">
-        <div className="relative w-full max-w-lg">
-          {/* 3D Cube Icon */}
-          <div className="relative mx-auto w-96 h-96 flex items-center justify-center">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-cyan-300 rounded-3xl transform rotate-12 opacity-50 blur-2xl"></div>
-            <div className="relative bg-gradient-to-br from-blue-500 to-cyan-400 rounded-3xl p-12 shadow-2xl transform hover:rotate-3 transition-transform duration-500 text-white font-medium">
-              AI Post Generator 3000
-            </div>
-          </div>
-        </div>
-      </div>
+      <div className="hidden lg:flex flex-1 bg-gradient-to-br from-blue-100 via-blue-50 to-cyan-50 items-center justify-center p-12 bg-[url(/images/yourstyle_ai_login_bg.png)] bg-cover "></div>
     </div>
   );
 }
