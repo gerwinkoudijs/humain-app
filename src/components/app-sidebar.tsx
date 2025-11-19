@@ -3,6 +3,7 @@
 import {
   Building,
   ChevronRight,
+  Earth,
   House,
   Icon,
   ImagePlus,
@@ -10,6 +11,8 @@ import {
   Settings2,
   User,
   UserCog,
+  Webhook,
+  WholeWord,
   X,
 } from "lucide-react";
 import * as React from "react";
@@ -65,6 +68,11 @@ const data = {
           title: "Genereer Social Post",
           url: "/generate",
           icon: <ImagePlus />,
+        },
+        {
+          title: "Genereer via URL",
+          url: "/from-url",
+          icon: <Earth />,
         },
       ],
     },

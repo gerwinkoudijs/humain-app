@@ -18,7 +18,7 @@ export const Menu = () => {
           <Link
             key={item.name}
             href={item.path}
-            className={path.startsWith(item.path) ? "font-bold" : ""}
+            className={path.startsWith(item.path + "/") ? "font-bold" : ""}
           >
             {item.name}
           </Link>

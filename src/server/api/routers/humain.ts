@@ -5,6 +5,7 @@ import { editImage } from "@/server/lib/ai/humain/edit-image";
 import { generatePost } from "@/server/lib/ai/humain/gen-post";
 import { createNewSession } from "@/server/lib/ai/humain/new-session";
 import { generateImage } from "@/server/lib/ai/humain/gen-image";
+import { generateFromUrl } from "@/server/lib/ai/humain/from-url";
 
 export const humainRouter = createTRPCRouter({
   createNewSession: protectedProcedure
@@ -99,4 +100,24 @@ export const humainRouter = createTRPCRouter({
   //       base64Image: result,
   //     };
   //   }),
+
+  generateByUrl: protectedProcedure
+    .input(
+      z.object({
+        url: z.string().min(1),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const sess = await createNewSession(
+        ctx.session?.user?.id || "anonymous",
+        input.url,
+        1
+      );
+
+      await generateFromUrl(sess.id, input.url);
+
+      return {
+        sessionId: sess.id,
+      };
+    }),
 });
