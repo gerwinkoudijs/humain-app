@@ -4,6 +4,8 @@ import { generateObject } from "ai";
 import { z } from "zod";
 import { storeImage } from "../../blob";
 import { db } from "../../db";
+import { GOOGLE_AI_MODEL } from "@/server/config";
+import { GOOGLE_AI_IMAGE_MODEL } from "../../../config";
 
 const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_AI_API_KEY ?? "",
@@ -30,12 +32,12 @@ export const generateFromUrl = async (chatSessionId: string, url: string) => {
       summary: z.string(),
     }),
     //model: google(aiModel),
-    model: google("gemini-2.5-flash"),
+    model: google(GOOGLE_AI_MODEL),
     providerOptions: {
       google: {
-        thinkingConfig: {
-          thinkingBudget: 0,
-        },
+        // thinkingConfig: {
+        //   thinkingBudget: 0,
+        // },
       },
     },
     prompt,
@@ -67,7 +69,7 @@ export const generateFromUrl = async (chatSessionId: string, url: string) => {
   const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_AI_API_KEY ?? "" });
 
   const aiResult = await ai.models.generateContent({
-    model: "gemini-2.5-flash-image",
+    model: GOOGLE_AI_IMAGE_MODEL,
     contents: [
       {
         text: `Genereer een social media afbeelding voor deze website: ${url}. Lees de website, bepaal de branding en bekijk de afbeelding en huisstijl. Genereer de uiteindelijke afbeelding op basis van deze prompt: ${result.object.prompt}`,

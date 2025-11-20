@@ -2,6 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 import { Readable } from "stream";
 import { db } from "../../db";
 import { processTemplate } from "./process-template";
+import { GOOGLE_AI_IMAGE_MODEL } from "../../../config";
 
 export const editImage = async (
   chatSessionId: string,
@@ -56,7 +57,7 @@ export const editImage = async (
   );
 
   const aiResult1 = await ai.models.generateContent({
-    model: "gemini-2.5-flash-image",
+    model: GOOGLE_AI_IMAGE_MODEL,
     contents: [
       {
         inlineData: {

@@ -7,6 +7,8 @@ import { db } from "../../db";
 import { getHumainDesignerPrompt } from "./designer";
 import { processTemplate } from "./process-template";
 import { storeImage } from "../../blob";
+import { GOOGLE_AI_IMAGE_MODEL } from "../../../config";
+import { writeFileSync } from "fs";
 
 export const generateImage = async (
   chatSessionId: string,
@@ -75,7 +77,7 @@ export const generateImage = async (
   );
 
   const aiResult = await ai.models.generateContent({
-    model: "gemini-2.5-flash-image",
+    model: GOOGLE_AI_IMAGE_MODEL,
     contents: [
       ...imagesBase64.map((base64Data) => ({
         inlineData: {
@@ -91,6 +93,8 @@ export const generateImage = async (
       temperature: 0.4,
     },
   });
+
+  // writeFileSync("/tmp/debug-ai-result.json", JSON.stringify(aiResult, null, 2));
 
   const parts = aiResult.candidates?.[0].content?.parts;
 

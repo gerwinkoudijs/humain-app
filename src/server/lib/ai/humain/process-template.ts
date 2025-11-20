@@ -4,6 +4,7 @@ import { db } from "../../db";
 import path from "path";
 import { createReadStream } from "fs";
 import { storeImage } from "../../blob";
+import { GOOGLE_AI_IMAGE_MODEL } from "../../../config";
 
 export const processTemplate = async (chatSessionId: string) => {
   // Get source image from chat session
@@ -38,7 +39,7 @@ export const processTemplate = async (chatSessionId: string) => {
 
   // Apply the template (background)
   const aiResult = await ai.models.generateContent({
-    model: "gemini-2.5-flash-image",
+    model: GOOGLE_AI_IMAGE_MODEL,
     contents: [
       {
         inlineData: {

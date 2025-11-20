@@ -3,6 +3,7 @@ import { generateObject } from "ai";
 import { z } from "zod";
 import { yourstyleInfo } from "../../../../data/yourstyle_info";
 import { db } from "../../db";
+import { GOOGLE_AI_MODEL } from "@/server/config";
 
 const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_AI_API_KEY ?? "",
@@ -60,12 +61,12 @@ export const generatePost = async (chatSessionId: string, text: string) => {
       ),
     }),
     //model: google(aiModel),
-    model: google("gemini-2.5-flash"),
+    model: google(GOOGLE_AI_MODEL),
     providerOptions: {
       google: {
-        thinkingConfig: {
-          thinkingBudget: 0,
-        },
+        // thinkingConfig: {
+        //   thinkingBudget: 0,
+        // },
       },
     },
     prompt,
