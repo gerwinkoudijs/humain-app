@@ -40,6 +40,9 @@ export const processTemplate = async (chatSessionId: string) => {
 
   const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_AI_API_KEY ?? "" });
 
+  const dd = new Date();
+  console.log("@@@@ E", dd);
+
   // Apply the template (background)
   const aiResult = await ai.models.generateContent({
     model: GOOGLE_AI_IMAGE_MODEL_FAST,
@@ -71,6 +74,13 @@ export const processTemplate = async (chatSessionId: string) => {
       temperature: 0.1,
     },
   });
+
+  console.log(
+    "@@@@ F",
+    new Date(),
+    (new Date().getTime() - dd.getTime()) / 1000,
+    "seconds"
+  );
 
   const parts = aiResult.candidates?.[0].content?.parts;
 

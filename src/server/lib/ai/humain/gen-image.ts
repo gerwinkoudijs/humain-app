@@ -76,6 +76,8 @@ export const generateImage = async (
     })
   );
 
+  const dd = new Date();
+  console.log("@@@@ A", dd);
   const aiResult = await ai.models.generateContent({
     model: GOOGLE_AI_IMAGE_MODEL,
     contents: [
@@ -93,7 +95,12 @@ export const generateImage = async (
       temperature: 0.4,
     },
   });
-
+  console.log(
+    "@@@@ B",
+    new Date(),
+    (new Date().getTime() - dd.getTime()) / 1000,
+    "seconds"
+  );
   // writeFileSync("/tmp/debug-ai-result.json", JSON.stringify(aiResult, null, 2));
 
   const parts = aiResult.candidates?.[0].content?.parts;

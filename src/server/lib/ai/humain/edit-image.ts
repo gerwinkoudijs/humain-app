@@ -56,6 +56,8 @@ export const editImage = async (
     })
   );
 
+  const dd = new Date();
+  console.log("@@@@ C", dd);
   const aiResult1 = await ai.models.generateContent({
     model: GOOGLE_AI_IMAGE_MODEL,
     contents: [
@@ -87,6 +89,13 @@ ${prompt}
       temperature: 0.1,
     },
   });
+
+  console.log(
+    "@@@@ D",
+    new Date(),
+    (new Date().getTime() - dd.getTime()) / 1000,
+    "seconds"
+  );
 
   const parts1 = aiResult1.candidates?.[0].content?.parts;
 
