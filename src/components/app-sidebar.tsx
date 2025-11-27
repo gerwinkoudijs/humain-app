@@ -126,7 +126,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <div className="">Yourstyle</div>
           <div className="bg-primary text-white rounded-lg px-3 py-1.5">AI</div>
           <div className="absolute right-4 top-2 text-[10px] text-gray-400 font-mono z-40">
-            v0.1.2
+            v0.1.3
           </div>
         </div>
         {isImpersonating && (
