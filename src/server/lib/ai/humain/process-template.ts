@@ -4,7 +4,10 @@ import { db } from "../../db";
 import path from "path";
 import { createReadStream } from "fs";
 import { storeImage } from "../../blob";
-import { GOOGLE_AI_IMAGE_MODEL } from "../../../config";
+import {
+  GOOGLE_AI_IMAGE_MODEL,
+  GOOGLE_AI_IMAGE_MODEL_FAST,
+} from "../../../config";
 
 export const processTemplate = async (chatSessionId: string) => {
   // Get source image from chat session
@@ -39,7 +42,7 @@ export const processTemplate = async (chatSessionId: string) => {
 
   // Apply the template (background)
   const aiResult = await ai.models.generateContent({
-    model: GOOGLE_AI_IMAGE_MODEL,
+    model: GOOGLE_AI_IMAGE_MODEL_FAST,
     contents: [
       {
         inlineData: {

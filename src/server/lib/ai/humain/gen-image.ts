@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, ThinkingLevel } from "@google/genai";
 import { Readable } from "stream";
 
 // import { createUrlReadStream } from "@/lib/file";

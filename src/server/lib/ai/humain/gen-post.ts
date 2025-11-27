@@ -3,7 +3,7 @@ import { generateObject } from "ai";
 import { z } from "zod";
 import { yourstyleInfo } from "../../../../data/yourstyle_info";
 import { db } from "../../db";
-import { GOOGLE_AI_MODEL } from "@/server/config";
+import { GOOGLE_AI_MODEL, GOOGLE_AI_MODEL_FAST } from "@/server/config";
 
 const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_AI_API_KEY ?? "",
@@ -61,7 +61,7 @@ export const generatePost = async (chatSessionId: string, text: string) => {
       ),
     }),
     //model: google(aiModel),
-    model: google(GOOGLE_AI_MODEL),
+    model: google(GOOGLE_AI_MODEL_FAST),
     providerOptions: {
       google: {
         // thinkingConfig: {
