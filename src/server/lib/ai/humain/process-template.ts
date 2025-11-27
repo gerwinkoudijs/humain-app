@@ -1,5 +1,4 @@
 import { GoogleGenAI } from "@google/genai";
-import { put } from "@vercel/blob";
 import { db } from "../../db";
 import path from "path";
 import { createReadStream } from "fs";
