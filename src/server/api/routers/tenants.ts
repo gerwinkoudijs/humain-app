@@ -1,7 +1,6 @@
 // src/server/api/routers/tenants.ts
 import { z } from "zod";
 import { adminProcedure, router } from "../trpc";
-import { Role } from "@generated/prisma";
 
 export const tenantsRouter = router({
   getTenants: adminProcedure.query(async ({ ctx }) => {
@@ -86,10 +85,11 @@ export const tenantsRouter = router({
         id: z.string().uuid(),
         name: z.string().min(1).optional(),
         monthlyPostLimit: z.number().int().min(0).optional(),
+        geminiModelName: z.string().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { id, name, monthlyPostLimit } = input;
+      const { id, name, monthlyPostLimit, geminiModelName } = input;
       const updateData: any = {};
 
       if (name !== undefined) {
@@ -99,6 +99,10 @@ export const tenantsRouter = router({
 
       if (monthlyPostLimit !== undefined) {
         updateData.monthlyPostLimit = monthlyPostLimit;
+      }
+
+      if (geminiModelName !== undefined) {
+        updateData.geminiModelName = geminiModelName;
       }
 
       const tenant = await ctx.db.tenant.update({

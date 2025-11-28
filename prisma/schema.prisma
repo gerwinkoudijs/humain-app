@@ -73,13 +73,13 @@ model Account {
 }
 
 model Session {
-  sessionToken String   @unique
-  expires      DateTime
-  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId       String   @db.Uuid
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  isImpersonating Boolean @default(false)
-  originalAdminSessionToken String? @db.VarChar
+  sessionToken              String   @unique
+  expires                   DateTime
+  id                        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId                    String   @db.Uuid
+  user                      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isImpersonating           Boolean  @default(false)
+  originalAdminSessionToken String?  @db.VarChar
 
   @@index([userId], map: "idx_session_user_id")
   @@index([originalAdminSessionToken], map: "idx_session_original_admin")
@@ -110,13 +110,14 @@ model VerificationToken {
 }
 
 model Tenant {
-  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name               String
-  slug               String   @unique
-  monthlyPostLimit   Int      @default(100)
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-  users              User[]
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name             String
+  slug             String   @unique
+  monthlyPostLimit Int      @default(100)
+  geminiModelName  String?  @db.VarChar
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  users            User[]
 }
 
 enum Role {

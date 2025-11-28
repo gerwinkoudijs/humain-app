@@ -1,14 +1,12 @@
-import { GoogleGenAI, ThinkingLevel } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 import { Readable } from "stream";
 
 // import { createUrlReadStream } from "@/lib/file";
 // import OpenAI, { toFile } from "openai";
+import { GOOGLE_AI_IMAGE_MODEL } from "../../../config";
 import { db } from "../../db";
 import { getHumainDesignerPrompt } from "./designer";
 import { processTemplate } from "./process-template";
-import { storeImage } from "../../blob";
-import { GOOGLE_AI_IMAGE_MODEL } from "../../../config";
-import { writeFileSync } from "fs";
 
 export const generateImage = async (
   chatSessionId: string,
