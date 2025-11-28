@@ -168,11 +168,7 @@ export default function SignIn() {
           </div>
 
           {/* Footer Text */}
-          <p className="text-sm text-gray-500 text-center leading-relaxed">
-            Join the millions of smart investors who trust us to manage their
-            finances. Log in to access your personalized dashboard, track your
-            portfolio performance, and make informed investment decisions.
-          </p>
+          <p className="text-sm text-gray-500 text-center leading-relaxed"></p>
         </div>
       </div>
 
