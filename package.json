@@ -20,7 +20,7 @@
     "@google/genai": "^1.30.0",
     "@hookform/resolvers": "^5.2.2",
     "@llamaindex/anthropic": "^0.3.7",
-    "@llamaindex/google": "^0.3.9",
+    "@llamaindex/google": "0.3.9",
     "@llamaindex/postgres": "^0.0.53",
     "@llamaindex/vercel": "^0.1.6",
     "@microsoft/microsoft-graph-client": "^3.0.7",
