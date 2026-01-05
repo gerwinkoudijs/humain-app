@@ -1,11 +1,21 @@
+"use client";
+
 import { ReactNode, useState } from "react";
 import { chat_messages, chat_sessions } from "@generated/prisma";
 import { Loader } from "@/components/ui/loader";
 import { api } from "@/trpc/react";
 import Image from "next/image";
 import { Dots } from "@/components/ui/dots";
-import { AnimatePresence, motion } from "motion/react";
 import { RefreshCw } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+
+const MotionDiv = motion.div as React.FC<
+  React.HTMLAttributes<HTMLDivElement> & {
+    initial?: { opacity: number };
+    animate?: { opacity: number };
+    exit?: { opacity: number };
+  }
+>;
 
 export const ChatContainer = (props: {
   session: chat_sessions;
@@ -104,14 +114,14 @@ export const ChatContainer = (props: {
       )}
       <AnimatePresence initial={true}>
         {props.thinking && (
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="w-full flex justify-end"
           >
             <Dots />
-          </motion.div>
+          </MotionDiv>
         )}
       </AnimatePresence>
       {/* <UserMessage>Hey!</UserMessage>

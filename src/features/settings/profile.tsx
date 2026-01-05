@@ -42,7 +42,7 @@ export const Profile = () => {
   }
 
   return (
-    <div className="w-full flex flex-col grow p-8">
+    <div className="w-full flex flex-col grow p-8 max-w-[600px]">
       <div className="flex flex-col gap-4">
         <div>
           <Label htmlFor="name">Name</Label>

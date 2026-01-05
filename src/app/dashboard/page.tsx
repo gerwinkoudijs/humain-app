@@ -39,8 +39,8 @@ export default function UserDashboardPage() {
     stats && stats.usagePercentage >= 90
       ? "danger"
       : stats && stats.usagePercentage >= 70
-        ? "warning"
-        : "success";
+      ? "warning"
+      : "success";
 
   const statusColors = {
     danger: "text-red-600 bg-red-50 border-red-200",
@@ -56,9 +56,7 @@ export default function UserDashboardPage() {
           <BarChart3 className="h-8 w-8" />
           Dashboard
         </h1>
-        <p className="text-gray-500 mt-1">
-          Overzicht van je chat statistieken
-        </p>
+        <p className="text-gray-500 mt-1">Overzicht van je chat statistieken</p>
       </div>
 
       {/* Main Stats */}
@@ -98,7 +96,13 @@ export default function UserDashboardPage() {
         </Card>
 
         <Card
-          className={`border-l-4 ${usageStatus === "danger" ? "border-l-red-500" : usageStatus === "warning" ? "border-l-orange-500" : "border-l-green-500"}`}
+          className={`border-l-4 ${
+            usageStatus === "danger"
+              ? "border-l-red-500"
+              : usageStatus === "warning"
+              ? "border-l-orange-500"
+              : "border-l-green-500"
+          }`}
         >
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-500 flex items-center gap-2">
@@ -112,7 +116,13 @@ export default function UserDashboardPage() {
             </p>
             <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
               <div
-                className={`h-2 rounded-full ${usageStatus === "danger" ? "bg-red-500" : usageStatus === "warning" ? "bg-orange-500" : "bg-green-500"}`}
+                className={`h-2 rounded-full ${
+                  usageStatus === "danger"
+                    ? "bg-red-500"
+                    : usageStatus === "warning"
+                    ? "bg-orange-500"
+                    : "bg-green-500"
+                }`}
                 style={{
                   width: `${Math.min(stats?.usagePercentage || 0, 100)}%`,
                 }}
@@ -142,7 +152,10 @@ export default function UserDashboardPage() {
               </p>
               <p className="text-xs text-gray-500 mt-1">
                 {stats?.sessionsLast7Days
-                  ? `${((stats.sessionsLast7Days / (stats.totalSessions || 1)) * 100).toFixed(1)}% van totaal`
+                  ? `${(
+                      (stats.sessionsLast7Days / (stats.totalSessions || 1)) *
+                      100
+                    ).toFixed(1)}% van totaal`
                   : "Geen sessies"}
               </p>
             </CardContent>
@@ -161,7 +174,10 @@ export default function UserDashboardPage() {
               </p>
               <p className="text-xs text-gray-500 mt-1">
                 {stats?.sessionsLast30Days
-                  ? `${((stats.sessionsLast30Days / (stats.totalSessions || 1)) * 100).toFixed(1)}% van totaal`
+                  ? `${(
+                      (stats.sessionsLast30Days / (stats.totalSessions || 1)) *
+                      100
+                    ).toFixed(1)}% van totaal`
                   : "Geen sessies"}
               </p>
             </CardContent>
@@ -178,9 +194,7 @@ export default function UserDashboardPage() {
               <p className="text-3xl font-bold text-purple-600">
                 {stats?.totalTokens?.toLocaleString() || 0}
               </p>
-              <p className="text-xs text-gray-500 mt-1">
-                AI verwerkte tokens
-              </p>
+              <p className="text-xs text-gray-500 mt-1">AI verwerkte tokens</p>
             </CardContent>
           </Card>
         </div>
@@ -193,9 +207,7 @@ export default function UserDashboardPage() {
             <BarChart3 className="h-5 w-5" />
             Activiteit Laatste 30 Dagen
           </CardTitle>
-          <p className="text-sm text-gray-500">
-            Aantal chat sessies per dag
-          </p>
+          <p className="text-sm text-gray-500">Aantal chat sessies per dag</p>
         </CardHeader>
         <CardContent>
           {stats && stats.sessionsByDay.length > 0 ? (
@@ -217,7 +229,7 @@ export default function UserDashboardPage() {
                       border: "1px solid #e5e7eb",
                       borderRadius: "0.5rem",
                     }}
-                    formatter={(value: number) => [value, "Sessies"]}
+                    formatter={(value) => [value, "Sessies"]}
                   />
                   <Bar dataKey="count" fill="#3b82f6" radius={[8, 8, 0, 0]} />
                 </BarChart>
@@ -242,9 +254,7 @@ export default function UserDashboardPage() {
               <Clock className="h-5 w-5" />
               Recente Sessies
             </CardTitle>
-            <p className="text-sm text-gray-500">
-              Je laatste 10 chat sessies
-            </p>
+            <p className="text-sm text-gray-500">Je laatste 10 chat sessies</p>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -255,9 +265,7 @@ export default function UserDashboardPage() {
                   className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 border border-gray-200 transition-colors"
                 >
                   <div className="flex-1">
-                    <p className="font-medium text-gray-900">
-                      {session.title}
-                    </p>
+                    <p className="font-medium text-gray-900">{session.title}</p>
                     <p className="text-sm text-gray-500">
                       {session.messageCount} berichten
                     </p>
@@ -281,7 +289,9 @@ export default function UserDashboardPage() {
           <CardContent className="pt-6">
             <div className="flex items-start gap-3">
               <Zap
-                className={`h-6 w-6 ${usageStatus === "danger" ? "text-red-600" : "text-orange-600"}`}
+                className={`h-6 w-6 ${
+                  usageStatus === "danger" ? "text-red-600" : "text-orange-600"
+                }`}
               />
               <div>
                 <h3 className="font-semibold text-gray-900">

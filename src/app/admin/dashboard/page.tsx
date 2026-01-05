@@ -221,7 +221,7 @@ export default function DashboardPage() {
                     ))}
                   </Pie>
                   <Tooltip
-                    formatter={(value: number) => [value, "Sessies"]}
+                    formatter={(value) => [value, "Sessies"]}
                     contentStyle={{
                       backgroundColor: "white",
                       border: "1px solid #e5e7eb",

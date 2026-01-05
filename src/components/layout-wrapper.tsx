@@ -9,6 +9,8 @@ import {
 import { Separator } from "@radix-ui/react-separator";
 import { AppSidebar } from "@/components/app-sidebar";
 import { DynamicBreadcrumbs } from "@/components/dynamic-breadcrumbs";
+import { ForcePasswordChange } from "@/components/force-password-change";
+import { Toaster } from "./ui/sonner";
 
 export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -31,6 +33,8 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
       </SidebarInset>
+      <ForcePasswordChange />
+      <Toaster />
     </SidebarProvider>
   );
 }
