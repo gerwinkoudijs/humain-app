@@ -4,12 +4,17 @@ import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Mail, Check } from "lucide-react";
+import { Mail, Check, Lock, Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [emailValid, setEmailValid] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -20,6 +25,30 @@ export default function SignIn() {
     const value = e.target.value;
     setEmail(value);
     setEmailValid(validateEmail(value));
+    setError("");
+  };
+
+  const handlePasswordLogin = async () => {
+    setIsLoading(true);
+    setError("");
+
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    setIsLoading(false);
+
+    if (result?.error) {
+      setError("Invalid email or password");
+    } else if (result?.ok) {
+      window.location.href = "/";
+    }
+  };
+
+  const handleMagicLinkLogin = () => {
+    signIn("email", { email, callbackUrl: "/" });
   };
 
   return (
@@ -30,33 +59,11 @@ export default function SignIn() {
           {/* Logo */}
           <div className="mb-12">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-black rounded flex items-center justify-center">
-                {/* <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="white"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M12 2L2 7L12 12L22 7L12 2Z" />
-                  <path d="M2 17L12 22L22 17" />
-                  <path d="M2 12L12 17L22 12" />
-                </svg> */}
-              </div>
+              <div className="w-8 h-8 bg-black rounded flex items-center justify-center"></div>
               <span className="text-xl font-semibold text-gray-900">
                 YourStyle AI
               </span>
             </div>
-          </div>
-
-          {/* Welcome Text */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Welcome Back
-            </h1>
-            <p className="text-gray-500">
-              Welcome Back, Please enter Your details
-            </p>
           </div>
 
           {/* Tab Buttons */}
@@ -72,7 +79,6 @@ export default function SignIn() {
               Sign In
             </button>
             <button
-              //    onClick={() => setIsSignUp(true)}
               className={`flex-1 py-3 px-4 rounded-lg font-medium transition-colors opacity-30 ${
                 isSignUp
                   ? "bg-white text-gray-900 shadow-sm border border-gray-200"
@@ -83,8 +89,15 @@ export default function SignIn() {
             </button>
           </div>
 
+          {/* Error Message */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+              {error}
+            </div>
+          )}
+
           {/* Email Input */}
-          <div className="mb-6">
+          <div className="mb-4">
             <label className="block text-sm text-gray-600 mb-2">
               Email Address
             </label>
@@ -109,17 +122,75 @@ export default function SignIn() {
             </div>
           </div>
 
-          {/* Continue Button */}
-          <Button
-            onClick={() => signIn("email", { email, callbackUrl: "/" })}
-            disabled={!emailValid}
-            className="w-full py-6 text-base font-medium bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed mb-6"
-          >
-            Continue
-          </Button>
+          <div className="mb-4">
+            <label className="block text-sm text-gray-600 mb-2">Password</label>
+            <div className="relative">
+              <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                <Lock size={20} />
+              </div>
+              <Input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setError("");
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && password) {
+                    handlePasswordLogin();
+                  }
+                }}
+                className="pl-12 pr-12 py-6 text-base border-gray-200 focus:border-blue-500 focus:ring-blue-500"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+            <div className="mt-2 text-right">
+              <Link
+                href="/auth/forgot-password"
+                className="text-sm text-primary-dark hover:text-primary"
+              >
+                Forgot password?
+              </Link>
+            </div>
+          </div>
+
+          {/* Login Button */}
+          {emailValid ? (
+            <Button
+              onClick={handlePasswordLogin}
+              disabled={!password || isLoading}
+              className="w-full py-6 text-base font-medium bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed mb-3"
+            >
+              {isLoading ? "Signing in..." : "Sign In"}
+            </Button>
+          ) : (
+            <Button
+              disabled
+              className="w-full py-6 text-base font-medium bg-gray-300 cursor-not-allowed mb-3"
+            >
+              Sign In
+            </Button>
+          )}
+
+          {/* Alternative login option */}
+          {emailValid && (
+            <button
+              onClick={handleMagicLinkLogin}
+              className="w-full text-sm text-gray-500 hover:text-gray-700 mb-6"
+            >
+              Or sign in with magic link instead
+            </button>
+          )}
 
           {/* Divider */}
-          <div className="relative mb-6">
+          <div className="relative mb-6 mt-3">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t border-gray-200" />
             </div>
@@ -155,23 +226,11 @@ export default function SignIn() {
                 />
               </svg>
             </button>
-            {/* <button className="flex-1 py-3 px-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z" />
-              </svg>
-            </button> */}
           </div>
 
           {/* Footer Text */}
           <p className="text-sm text-gray-500 text-center leading-relaxed">
-            Join the millions of smart investors who trust us to manage their
-            finances. Log in to access your personalized dashboard, track your
-            portfolio performance, and make informed investment decisions.
+            Generative AI Social Posts powered by AI Pal / De Indruk
           </p>
         </div>
       </div>

@@ -86,17 +86,20 @@ model Session {
 }
 
 model User {
-  name          String?
-  email         String?         @unique
-  emailVerified DateTime?
-  image         String?
-  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  tenantId      String?         @db.Uuid
-  accounts      Account[]
-  sessions      Session[]
-  tenant        Tenant?         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  chatSessions  chat_sessions[]
-  role          Role            @default(USER)
+  name                String?
+  email               String?              @unique
+  emailVerified       DateTime?
+  image               String?
+  password            String?
+  mustChangePassword  Boolean              @default(false)
+  id                  String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId            String?              @db.Uuid
+  accounts            Account[]
+  sessions            Session[]
+  tenant              Tenant?              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  chatSessions        chat_sessions[]
+  role                Role                 @default(USER)
+  passwordResetTokens PasswordResetToken[]
 
   @@index([tenantId], map: "idx_user_tenant_id")
 }
@@ -107,6 +110,16 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId  String   @db.Uuid
+  token   String   @unique
+  expires DateTime
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "idx_password_reset_token_user_id")
 }
 
 model Tenant {

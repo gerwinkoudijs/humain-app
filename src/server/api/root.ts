@@ -8,6 +8,7 @@ import { tenantsRouter } from "./routers/tenants";
 import { dashboardRouter } from "./routers/dashboard";
 import { impersonationRouter } from "./routers/impersonation";
 import { userDashboardRouter } from "./routers/user-dashboard";
+import { authRouter } from "./routers/auth";
 
 /**
  * This is the primary router for your server.
@@ -24,6 +25,7 @@ export const appRouter = createTRPCRouter({
   dashboard: dashboardRouter,
   impersonation: impersonationRouter,
   userDashboard: userDashboardRouter,
+  auth: authRouter,
 });
 
 // export type definition of API

@@ -5,18 +5,17 @@ import {
   ChevronRight,
   Earth,
   House,
-  Icon,
   ImagePlus,
   LogOut,
   Settings2,
   User,
   UserCog,
-  Webhook,
-  WholeWord,
   X,
 } from "lucide-react";
 import * as React from "react";
+import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
+import { ProfileDialog } from "@/features/settings/profile-dialog";
 
 import {
   Collapsible,
@@ -106,6 +105,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: session, status } = useSession();
   const { currentUser, isAdmin } = useCurrentUser();
   const { stopImpersonation } = useImpersonation();
+  const [profileDialogOpen, setProfileDialogOpen] = useState(false);
 
   // Check if currently impersonating from session
   const isImpersonating = session?.isImpersonating || false;
@@ -126,7 +126,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <div className="">Yourstyle</div>
           <div className="bg-primary text-white rounded-lg px-3 py-1.5">AI</div>
           <div className="absolute right-4 top-2 text-[10px] text-gray-400 font-mono z-40">
-            v0.1.3
+            v0.1.4
           </div>
         </div>
         {isImpersonating && (
@@ -228,14 +228,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="w-full justify-start">
               <User className="mr-2" />
-              {session?.user?.name}
+              {currentUser?.name}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href="/settings">Profile</Link>
+            <DropdownMenuItem onSelect={() => setProfileDialogOpen(true)}>
+              <User className="mr-2 h-4 w-4" />
+              <span>Profile</span>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => signOut()}>
               <LogOut className="mr-2 h-4 w-4" />
@@ -243,6 +244,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <ProfileDialog
+          isOpen={profileDialogOpen}
+          onOpenChange={setProfileDialogOpen}
+        />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

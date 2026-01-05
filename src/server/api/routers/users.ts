@@ -19,7 +19,14 @@ export const usersRouter = router({
               tenantId: input.tenantId,
             }
           : undefined,
-        include: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          emailVerified: true,
+          image: true,
+          tenantId: true,
+          role: true,
           tenant: true,
         },
         orderBy: {
@@ -42,6 +49,7 @@ export const usersRouter = router({
       // Check if user already exists
       const existingUser = await ctx.db.user.findUnique({
         where: { email: input.email },
+        select: { id: true },
       });
 
       if (existingUser) {
@@ -58,6 +66,15 @@ export const usersRouter = router({
               id: input.tenantId,
             },
           },
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          emailVerified: true,
+          image: true,
+          tenantId: true,
+          role: true,
         },
       });
       return user;
@@ -78,6 +95,15 @@ export const usersRouter = router({
       const user = await ctx.db.user.update({
         where: { id },
         data: updateData,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          emailVerified: true,
+          image: true,
+          tenantId: true,
+          role: true,
+        },
       });
       return user;
     }),
@@ -93,6 +119,15 @@ export const usersRouter = router({
       const user = await ctx.db.user.update({
         where: { id: input.id },
         data: { role: input.role },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          emailVerified: true,
+          image: true,
+          tenantId: true,
+          role: true,
+        },
       });
       return user;
     }),

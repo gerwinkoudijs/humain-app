@@ -82,7 +82,7 @@ export const userDashboardRouter = createTRPCRouter({
     // Get tenant info for monthly limit
     const user = await ctx.db.user.findUnique({
       where: { id: userId },
-      include: {
+      select: {
         tenant: {
           select: {
             monthlyPostLimit: true,
